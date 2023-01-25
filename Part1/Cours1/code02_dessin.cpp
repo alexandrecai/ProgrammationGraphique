@@ -17,7 +17,10 @@ static GLfloat coordonnees[] = {
         0, 1, 0,
         -1, 0, 0,
         1, 0, 0,
-        0, -1, 0};
+        0, -1, 0,
+        1, 0, 0,
+        0, -1, 0,
+        2, -1, 0};
 
 
 // Le sommet est défini par un attribut supplémentaire : la couleur en RGB
@@ -27,7 +30,10 @@ static GLfloat couleurs[] = {
         0, 0, 1, // bleu
         1, 0, 0, // rouge
         0, 1, 0, // vert
-        0, 0, 1
+        1, 1, 1,
+        1, 1, 0,
+        1, 1, 0,
+        1, 1, 0
 };
 
 // 2 attributs donc deux VBO pour les gérer donc deux identifiants
@@ -52,7 +58,7 @@ void init() {
 
     // 1er identifiant pour le VBO des coordonnées + chargement des données etc
     glBindBuffer(GL_ARRAY_BUFFER, vboid[0]);
-    glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), coordonnees, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 9 * 3 * sizeof(float), coordonnees, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0);
     glEnableVertexAttribArray(0); // layout(0) dans le shader
 
@@ -60,7 +66,7 @@ void init() {
 
     // 2eme identifiant pour le VBO des couleurs +  chargement des données
     glBindBuffer(GL_ARRAY_BUFFER, vboid[1]);
-    glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), couleurs, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 9 * 3 * sizeof(float), couleurs, GL_STATIC_DRAW);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0);
     glEnableVertexAttribArray(1); // layout(1) dans le shader
 
@@ -78,7 +84,7 @@ void Display(void) {
     // primitive graphique : ici les triangles
     // 0 : car on commence au début des données
     // 6 : car il y a 6 sommets dans deux triangles
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 9);
 
 
 }

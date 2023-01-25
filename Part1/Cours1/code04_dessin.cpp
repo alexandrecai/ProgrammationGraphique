@@ -1,4 +1,4 @@
-#include <iostream>
+ #include <iostream>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
@@ -35,18 +35,13 @@ static GLfloat couleurs[] = {
 };
 
 GLuint indices[] = {
-        3, 0, 2,
         0, 2, 1,
-        1, 2, 6,
-        1, 6, 5,
-        6, 5, 7,
-        5, 7, 4,
-        7, 4, 3,
-        4, 3, 0,
-        3, 2, 7,
-        2, 7, 6,
         0, 1, 4,
-        1, 4, 5
+        1, 4, 5,
+        2, 1, 5,
+        2, 1, 5,
+        0, 4, 2
+        
 };
 
 
@@ -106,7 +101,7 @@ void init() {
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboid[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 12 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 6 * sizeof(GLuint), indices, GL_STATIC_DRAW);
 
 
 
@@ -143,7 +138,7 @@ void Display(void) {
     // Il est temps d'aller regarder le shader TransformVertexShader.vert
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-    glDrawElements(GL_TRIANGLES, 3 * 12, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, 3 * 6, GL_UNSIGNED_INT, NULL);
 
     // Echange des buffers écriture de l'image et lecture (si double buffering)
     glfwSwapBuffers(window);
@@ -207,9 +202,10 @@ void Motion(GLFWwindow *window, double xpos, double ypos) {
         rotation = glm::rotate(rotation, (float) (xpos - mouseXOld) * stepTrans / 10, glm::vec3(0.f, 1.f, 0.f));
     }
     if (middlebutton == true) {
-        translation = glm::translate(translation, glm::vec3(0.f, 0.f, -(ypos - mouseYOld) * stepTrans / 10));
-        mouseXOld = xpos;
-        mouseYOld = ypos;
+        //translation = glm::translate(translation, glm::vec3(0.f, 0.f, -(ypos - mouseYOld) * stepTrans / 10));
+        //mouseXOld = xpos;
+        //mouseYOld = ypos;
+        rotation = glm::rotate(rotation, (float) (ypos - mouseYOld) * stepTrans / 10, glm::vec3(1.f, 0.f, 0.f));
     }
     if (rightbutton == true) {
         translation = glm::translate(translation, glm::vec3((xpos - mouseXOld) * stepTrans / 10,
