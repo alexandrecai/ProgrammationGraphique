@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/lapin.dir/lapin.cpp.o CMakeFiles/lapin.dir/Common/shaders_utilities.cpp.o CMakeFiles/lapin.dir/modele.cpp.o -o lapin  -lOpenGL -lGLX -lGLU -lGLEW -lglfw -lpthread 

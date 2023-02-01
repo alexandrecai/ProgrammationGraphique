@@ -24,7 +24,7 @@ add_definitions(
 )
 
 
-add_executable(code01_dessin 
+add_executable(code01_dessin
 	Cours1/code01_dessin.cpp Common/shaders_utilities.cpp
 )
 target_link_libraries(code01_dessin
@@ -81,3 +81,27 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/code05_dessin${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/Cours1/"
   )
 
+add_executable(code05_exo
+	Cours1/code05_exo.cpp Common/shaders_utilities.cpp
+)
+
+target_link_libraries(code05_exo
+	${ALL_LIBS}
+)
+
+add_custom_command(
+	TARGET code05_exo POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/code05_exo${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/Cours1/"
+)
+
+
+add_executable(lapin
+	Cours1/lapin.cpp Common/shaders_utilities.cpp Cours1/modele.cpp
+)
+target_link_libraries(lapin
+	${ALL_LIBS}
+)
+add_custom_command(
+  TARGET lapin POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/lapin${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/Cours1/"
+  )

@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /tmp/ProgrammationGraphique/Part1
+CMAKE_SOURCE_DIR = /tmp/programmationgraphique/Part1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /tmp/ProgrammationGraphique/Part1/build
+CMAKE_BINARY_DIR = /tmp/programmationgraphique/Part1/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -68,6 +68,8 @@ all: CMakeFiles/code02_dessin.dir/all
 all: CMakeFiles/code03_dessin.dir/all
 all: CMakeFiles/code04_dessin.dir/all
 all: CMakeFiles/code05_dessin.dir/all
+all: CMakeFiles/code05_exo.dir/all
+all: CMakeFiles/lapin.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -80,6 +82,8 @@ clean: CMakeFiles/code02_dessin.dir/clean
 clean: CMakeFiles/code03_dessin.dir/clean
 clean: CMakeFiles/code04_dessin.dir/clean
 clean: CMakeFiles/code05_dessin.dir/clean
+clean: CMakeFiles/code05_exo.dir/clean
+clean: CMakeFiles/lapin.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -89,14 +93,14 @@ clean: CMakeFiles/code05_dessin.dir/clean
 CMakeFiles/code01_dessin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_dessin.dir/build.make CMakeFiles/code01_dessin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_dessin.dir/build.make CMakeFiles/code01_dessin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/ProgrammationGraphique/Part1/build/CMakeFiles --progress-num=1,2,3 "Built target code01_dessin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=1,2,3 "Built target code01_dessin"
 .PHONY : CMakeFiles/code01_dessin.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/code01_dessin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code01_dessin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
 .PHONY : CMakeFiles/code01_dessin.dir/rule
 
 # Convenience name for target.
@@ -115,14 +119,14 @@ CMakeFiles/code01_dessin.dir/clean:
 CMakeFiles/code02_dessin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code02_dessin.dir/build.make CMakeFiles/code02_dessin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code02_dessin.dir/build.make CMakeFiles/code02_dessin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/ProgrammationGraphique/Part1/build/CMakeFiles --progress-num=4,5,6 "Built target code02_dessin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=4,5,6 "Built target code02_dessin"
 .PHONY : CMakeFiles/code02_dessin.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/code02_dessin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code02_dessin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
 .PHONY : CMakeFiles/code02_dessin.dir/rule
 
 # Convenience name for target.
@@ -141,14 +145,14 @@ CMakeFiles/code02_dessin.dir/clean:
 CMakeFiles/code03_dessin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code03_dessin.dir/build.make CMakeFiles/code03_dessin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code03_dessin.dir/build.make CMakeFiles/code03_dessin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/ProgrammationGraphique/Part1/build/CMakeFiles --progress-num=7,8,9 "Built target code03_dessin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=7,8,9 "Built target code03_dessin"
 .PHONY : CMakeFiles/code03_dessin.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/code03_dessin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code03_dessin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
 .PHONY : CMakeFiles/code03_dessin.dir/rule
 
 # Convenience name for target.
@@ -167,14 +171,14 @@ CMakeFiles/code03_dessin.dir/clean:
 CMakeFiles/code04_dessin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code04_dessin.dir/build.make CMakeFiles/code04_dessin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code04_dessin.dir/build.make CMakeFiles/code04_dessin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/ProgrammationGraphique/Part1/build/CMakeFiles --progress-num=10,11,12 "Built target code04_dessin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=10,11,12 "Built target code04_dessin"
 .PHONY : CMakeFiles/code04_dessin.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/code04_dessin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code04_dessin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
 .PHONY : CMakeFiles/code04_dessin.dir/rule
 
 # Convenience name for target.
@@ -193,14 +197,14 @@ CMakeFiles/code04_dessin.dir/clean:
 CMakeFiles/code05_dessin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_dessin.dir/build.make CMakeFiles/code05_dessin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_dessin.dir/build.make CMakeFiles/code05_dessin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/ProgrammationGraphique/Part1/build/CMakeFiles --progress-num=13,14,15 "Built target code05_dessin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=13,14,15 "Built target code05_dessin"
 .PHONY : CMakeFiles/code05_dessin.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/code05_dessin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code05_dessin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/ProgrammationGraphique/Part1/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
 .PHONY : CMakeFiles/code05_dessin.dir/rule
 
 # Convenience name for target.
@@ -211,6 +215,58 @@ code05_dessin: CMakeFiles/code05_dessin.dir/rule
 CMakeFiles/code05_dessin.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_dessin.dir/build.make CMakeFiles/code05_dessin.dir/clean
 .PHONY : CMakeFiles/code05_dessin.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/code05_exo.dir
+
+# All Build rule for target.
+CMakeFiles/code05_exo.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=16,17,18 "Built target code05_exo"
+.PHONY : CMakeFiles/code05_exo.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/code05_exo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 3
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code05_exo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
+.PHONY : CMakeFiles/code05_exo.dir/rule
+
+# Convenience name for target.
+code05_exo: CMakeFiles/code05_exo.dir/rule
+.PHONY : code05_exo
+
+# clean rule for target.
+CMakeFiles/code05_exo.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/clean
+.PHONY : CMakeFiles/code05_exo.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/lapin.dir
+
+# All Build rule for target.
+CMakeFiles/lapin.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=19,20,21,22 "Built target lapin"
+.PHONY : CMakeFiles/lapin.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/lapin.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/lapin.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
+.PHONY : CMakeFiles/lapin.dir/rule
+
+# Convenience name for target.
+lapin: CMakeFiles/lapin.dir/rule
+.PHONY : lapin
+
+# clean rule for target.
+CMakeFiles/lapin.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/clean
+.PHONY : CMakeFiles/lapin.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

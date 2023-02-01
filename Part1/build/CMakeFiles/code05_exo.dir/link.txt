@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/code05_exo.dir/Cours1/code05_exo.cpp.o CMakeFiles/code05_exo.dir/Common/shaders_utilities.cpp.o -o code05_exo  -lOpenGL -lGLX -lGLU -lGLEW -lglfw -lpthread 

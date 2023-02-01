@@ -1,5 +1,5 @@
 CMakeFiles/code01_dessin.dir/Cours1/code01_dessin.cpp.o: \
- /tmp/ProgrammationGraphique/Part1/Cours1/code01_dessin.cpp \
+ /tmp/programmationgraphique/Part1/Cours1/code01_dessin.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -170,4 +170,4 @@ CMakeFiles/code01_dessin.dir/Cours1/code01_dessin.cpp.o: \
  /usr/include/c++/11/tr1/poly_hermite.tcc \
  /usr/include/c++/11/tr1/poly_laguerre.tcc \
  /usr/include/c++/11/tr1/riemann_zeta.tcc \
- /tmp/ProgrammationGraphique/Part1/Cours1/../Common/shaders_utilities.hpp
+ /tmp/programmationgraphique/Part1/Cours1/../Common/shaders_utilities.hpp

@@ -1,5 +1,5 @@
 CMakeFiles/code04_dessin.dir/Cours1/code04_dessin.cpp.o: \
- /tmp/ProgrammationGraphique/Part1/Cours1/code04_dessin.cpp \
+ /tmp/programmationgraphique/Part1/Cours1/code04_dessin.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -170,7 +170,7 @@ CMakeFiles/code04_dessin.dir/Cours1/code04_dessin.cpp.o: \
  /usr/include/c++/11/tr1/poly_hermite.tcc \
  /usr/include/c++/11/tr1/poly_laguerre.tcc \
  /usr/include/c++/11/tr1/riemann_zeta.tcc \
- /tmp/ProgrammationGraphique/Part1/Cours1/../Common/shaders_utilities.hpp \
+ /tmp/programmationgraphique/Part1/Cours1/../Common/shaders_utilities.hpp \
  /usr/include/glm/glm.hpp /usr/include/glm/detail/_fixes.hpp \
  /usr/include/glm/detail/setup.hpp /usr/include/c++/11/cassert \
  /usr/include/assert.h /usr/include/glm/simd/platform.h \

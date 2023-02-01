@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/tmp/ProgrammationGraphique/Part1/Common/shaders_utilities.cpp" "CMakeFiles/code02_dessin.dir/Common/shaders_utilities.cpp.o" "gcc" "CMakeFiles/code02_dessin.dir/Common/shaders_utilities.cpp.o.d"
-  "/tmp/ProgrammationGraphique/Part1/Cours1/code02_dessin.cpp" "CMakeFiles/code02_dessin.dir/Cours1/code02_dessin.cpp.o" "gcc" "CMakeFiles/code02_dessin.dir/Cours1/code02_dessin.cpp.o.d"
+  "/tmp/programmationgraphique/Part1/Common/shaders_utilities.cpp" "CMakeFiles/code02_dessin.dir/Common/shaders_utilities.cpp.o" "gcc" "CMakeFiles/code02_dessin.dir/Common/shaders_utilities.cpp.o.d"
+  "/tmp/programmationgraphique/Part1/Cours1/code02_dessin.cpp" "CMakeFiles/code02_dessin.dir/Cours1/code02_dessin.cpp.o" "gcc" "CMakeFiles/code02_dessin.dir/Cours1/code02_dessin.cpp.o.d"
   )
 
 # Targets to which this target links.
