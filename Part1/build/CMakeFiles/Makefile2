@@ -70,6 +70,7 @@ all: CMakeFiles/code04_dessin.dir/all
 all: CMakeFiles/code05_dessin.dir/all
 all: CMakeFiles/code05_exo.dir/all
 all: CMakeFiles/lapin.dir/all
+all: CMakeFiles/code05_ico.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -84,6 +85,7 @@ clean: CMakeFiles/code04_dessin.dir/clean
 clean: CMakeFiles/code05_dessin.dir/clean
 clean: CMakeFiles/code05_exo.dir/clean
 clean: CMakeFiles/lapin.dir/clean
+clean: CMakeFiles/code05_ico.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -249,7 +251,7 @@ CMakeFiles/code05_exo.dir/clean:
 CMakeFiles/lapin.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=19,20,21,22 "Built target lapin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=22,23,24,25 "Built target lapin"
 .PHONY : CMakeFiles/lapin.dir/all
 
 # Build rule for subdir invocation for target.
@@ -267,6 +269,32 @@ lapin: CMakeFiles/lapin.dir/rule
 CMakeFiles/lapin.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/clean
 .PHONY : CMakeFiles/lapin.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/code05_ico.dir
+
+# All Build rule for target.
+CMakeFiles/code05_ico.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/tmp/programmationgraphique/Part1/build/CMakeFiles --progress-num=19,20,21 "Built target code05_ico"
+.PHONY : CMakeFiles/code05_ico.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/code05_ico.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 3
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/code05_ico.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/programmationgraphique/Part1/build/CMakeFiles 0
+.PHONY : CMakeFiles/code05_ico.dir/rule
+
+# Convenience name for target.
+code05_ico: CMakeFiles/code05_ico.dir/rule
+.PHONY : code05_ico
+
+# clean rule for target.
+CMakeFiles/code05_ico.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/clean
+.PHONY : CMakeFiles/code05_ico.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

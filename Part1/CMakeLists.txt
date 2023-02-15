@@ -105,3 +105,15 @@ add_custom_command(
   TARGET lapin POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/lapin${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/Cours1/"
   )
+
+
+add_executable(code05_ico
+	Cours1/code05_ico.cpp Common/shaders_utilities.cpp Cours1/code05_ico.cpp
+)
+target_link_libraries(code05_ico
+	${ALL_LIBS}
+)
+add_custom_command(
+  TARGET code05_ico POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/code05_ico${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/Cours1/"
+  )

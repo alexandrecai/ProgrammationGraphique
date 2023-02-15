@@ -207,6 +207,19 @@ lapin/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/build
 .PHONY : lapin/fast
 
+#=============================================================================
+# Target rules for targets named code05_ico
+
+# Build rule for target.
+code05_ico: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 code05_ico
+.PHONY : code05_ico
+
+# fast build rule for target.
+code05_ico/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/build
+.PHONY : code05_ico/fast
+
 Common/shaders_utilities.o: Common/shaders_utilities.cpp.o
 .PHONY : Common/shaders_utilities.o
 
@@ -219,6 +232,7 @@ Common/shaders_utilities.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_dessin.dir/build.make CMakeFiles/code05_dessin.dir/Common/shaders_utilities.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/Common/shaders_utilities.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/Common/shaders_utilities.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Common/shaders_utilities.cpp.o
 .PHONY : Common/shaders_utilities.cpp.o
 
 Common/shaders_utilities.i: Common/shaders_utilities.cpp.i
@@ -233,6 +247,7 @@ Common/shaders_utilities.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_dessin.dir/build.make CMakeFiles/code05_dessin.dir/Common/shaders_utilities.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/Common/shaders_utilities.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/Common/shaders_utilities.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Common/shaders_utilities.cpp.i
 .PHONY : Common/shaders_utilities.cpp.i
 
 Common/shaders_utilities.s: Common/shaders_utilities.cpp.s
@@ -247,6 +262,7 @@ Common/shaders_utilities.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_dessin.dir/build.make CMakeFiles/code05_dessin.dir/Common/shaders_utilities.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/Common/shaders_utilities.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/Common/shaders_utilities.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Common/shaders_utilities.cpp.s
 .PHONY : Common/shaders_utilities.cpp.s
 
 Cours1/code01_dessin.o: Cours1/code01_dessin.cpp.o
@@ -393,6 +409,30 @@ Cours1/code05_exo.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/Cours1/code05_exo.cpp.s
 .PHONY : Cours1/code05_exo.cpp.s
 
+Cours1/code05_ico.o: Cours1/code05_ico.cpp.o
+.PHONY : Cours1/code05_ico.o
+
+# target to build an object file
+Cours1/code05_ico.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Cours1/code05_ico.cpp.o
+.PHONY : Cours1/code05_ico.cpp.o
+
+Cours1/code05_ico.i: Cours1/code05_ico.cpp.i
+.PHONY : Cours1/code05_ico.i
+
+# target to preprocess a source file
+Cours1/code05_ico.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Cours1/code05_ico.cpp.i
+.PHONY : Cours1/code05_ico.cpp.i
+
+Cours1/code05_ico.s: Cours1/code05_ico.cpp.s
+.PHONY : Cours1/code05_ico.s
+
+# target to generate assembly for a file
+Cours1/code05_ico.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Cours1/code05_ico.cpp.s
+.PHONY : Cours1/code05_ico.cpp.s
+
 Cours1/lapin.o: Cours1/lapin.cpp.o
 .PHONY : Cours1/lapin.o
 
@@ -455,6 +495,7 @@ help:
 	@echo "... code04_dessin"
 	@echo "... code05_dessin"
 	@echo "... code05_exo"
+	@echo "... code05_ico"
 	@echo "... lapin"
 	@echo "... Common/shaders_utilities.o"
 	@echo "... Common/shaders_utilities.i"
@@ -477,6 +518,9 @@ help:
 	@echo "... Cours1/code05_exo.o"
 	@echo "... Cours1/code05_exo.i"
 	@echo "... Cours1/code05_exo.s"
+	@echo "... Cours1/code05_ico.o"
+	@echo "... Cours1/code05_ico.i"
+	@echo "... Cours1/code05_ico.s"
 	@echo "... Cours1/lapin.o"
 	@echo "... Cours1/lapin.i"
 	@echo "... Cours1/lapin.s"
