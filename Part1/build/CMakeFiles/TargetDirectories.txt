@@ -6,5 +6,6 @@
 /tmp/programmationgraphique/Part1/build/CMakeFiles/code05_exo.dir
 /tmp/programmationgraphique/Part1/build/CMakeFiles/lapin.dir
 /tmp/programmationgraphique/Part1/build/CMakeFiles/code05_ico.dir
+/tmp/programmationgraphique/Part1/build/CMakeFiles/code01_trajectoire.dir
 /tmp/programmationgraphique/Part1/build/CMakeFiles/edit_cache.dir
 /tmp/programmationgraphique/Part1/build/CMakeFiles/rebuild_cache.dir

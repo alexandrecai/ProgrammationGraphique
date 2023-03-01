@@ -117,3 +117,15 @@ add_custom_command(
   TARGET code05_ico POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/code05_ico${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/Cours1/"
   )
+  
+add_executable(code01_trajectoire
+    TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp TD_Icosaedre/LecteurTraj/lecture.cpp Common/shaders_utilities.cpp Common/lecture_trajectoire.cpp Common/xdrfile.c
+)
+target_link_libraries(code01_trajectoire
+    ${ALL_LIBS}
+)
+
+add_custom_command(
+  TARGET code01_trajectoire POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/code01_trajectoire${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/TD_Icosaedre/LecteurTraj"
+  )

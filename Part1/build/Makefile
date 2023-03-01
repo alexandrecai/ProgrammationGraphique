@@ -220,6 +220,43 @@ code05_ico/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/build
 .PHONY : code05_ico/fast
 
+#=============================================================================
+# Target rules for targets named code01_trajectoire
+
+# Build rule for target.
+code01_trajectoire: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 code01_trajectoire
+.PHONY : code01_trajectoire
+
+# fast build rule for target.
+code01_trajectoire/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/build
+.PHONY : code01_trajectoire/fast
+
+Common/lecture_trajectoire.o: Common/lecture_trajectoire.cpp.o
+.PHONY : Common/lecture_trajectoire.o
+
+# target to build an object file
+Common/lecture_trajectoire.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/lecture_trajectoire.cpp.o
+.PHONY : Common/lecture_trajectoire.cpp.o
+
+Common/lecture_trajectoire.i: Common/lecture_trajectoire.cpp.i
+.PHONY : Common/lecture_trajectoire.i
+
+# target to preprocess a source file
+Common/lecture_trajectoire.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/lecture_trajectoire.cpp.i
+.PHONY : Common/lecture_trajectoire.cpp.i
+
+Common/lecture_trajectoire.s: Common/lecture_trajectoire.cpp.s
+.PHONY : Common/lecture_trajectoire.s
+
+# target to generate assembly for a file
+Common/lecture_trajectoire.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/lecture_trajectoire.cpp.s
+.PHONY : Common/lecture_trajectoire.cpp.s
+
 Common/shaders_utilities.o: Common/shaders_utilities.cpp.o
 .PHONY : Common/shaders_utilities.o
 
@@ -233,6 +270,7 @@ Common/shaders_utilities.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/Common/shaders_utilities.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/Common/shaders_utilities.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Common/shaders_utilities.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/shaders_utilities.cpp.o
 .PHONY : Common/shaders_utilities.cpp.o
 
 Common/shaders_utilities.i: Common/shaders_utilities.cpp.i
@@ -248,6 +286,7 @@ Common/shaders_utilities.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/Common/shaders_utilities.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/Common/shaders_utilities.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Common/shaders_utilities.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/shaders_utilities.cpp.i
 .PHONY : Common/shaders_utilities.cpp.i
 
 Common/shaders_utilities.s: Common/shaders_utilities.cpp.s
@@ -263,7 +302,32 @@ Common/shaders_utilities.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_exo.dir/build.make CMakeFiles/code05_exo.dir/Common/shaders_utilities.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/Common/shaders_utilities.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code05_ico.dir/build.make CMakeFiles/code05_ico.dir/Common/shaders_utilities.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/shaders_utilities.cpp.s
 .PHONY : Common/shaders_utilities.cpp.s
+
+Common/xdrfile.o: Common/xdrfile.c.o
+.PHONY : Common/xdrfile.o
+
+# target to build an object file
+Common/xdrfile.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/xdrfile.c.o
+.PHONY : Common/xdrfile.c.o
+
+Common/xdrfile.i: Common/xdrfile.c.i
+.PHONY : Common/xdrfile.i
+
+# target to preprocess a source file
+Common/xdrfile.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/xdrfile.c.i
+.PHONY : Common/xdrfile.c.i
+
+Common/xdrfile.s: Common/xdrfile.c.s
+.PHONY : Common/xdrfile.s
+
+# target to generate assembly for a file
+Common/xdrfile.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/Common/xdrfile.c.s
+.PHONY : Common/xdrfile.c.s
 
 Cours1/code01_dessin.o: Cours1/code01_dessin.cpp.o
 .PHONY : Cours1/code01_dessin.o
@@ -481,6 +545,54 @@ Cours1/modele.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lapin.dir/build.make CMakeFiles/lapin.dir/Cours1/modele.cpp.s
 .PHONY : Cours1/modele.cpp.s
 
+TD_Icosaedre/LecteurTraj/code01_trajectoire.o: TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.o
+.PHONY : TD_Icosaedre/LecteurTraj/code01_trajectoire.o
+
+# target to build an object file
+TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.o
+.PHONY : TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.o
+
+TD_Icosaedre/LecteurTraj/code01_trajectoire.i: TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.i
+.PHONY : TD_Icosaedre/LecteurTraj/code01_trajectoire.i
+
+# target to preprocess a source file
+TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.i
+.PHONY : TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.i
+
+TD_Icosaedre/LecteurTraj/code01_trajectoire.s: TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.s
+.PHONY : TD_Icosaedre/LecteurTraj/code01_trajectoire.s
+
+# target to generate assembly for a file
+TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.s
+.PHONY : TD_Icosaedre/LecteurTraj/code01_trajectoire.cpp.s
+
+TD_Icosaedre/LecteurTraj/lecture.o: TD_Icosaedre/LecteurTraj/lecture.cpp.o
+.PHONY : TD_Icosaedre/LecteurTraj/lecture.o
+
+# target to build an object file
+TD_Icosaedre/LecteurTraj/lecture.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/TD_Icosaedre/LecteurTraj/lecture.cpp.o
+.PHONY : TD_Icosaedre/LecteurTraj/lecture.cpp.o
+
+TD_Icosaedre/LecteurTraj/lecture.i: TD_Icosaedre/LecteurTraj/lecture.cpp.i
+.PHONY : TD_Icosaedre/LecteurTraj/lecture.i
+
+# target to preprocess a source file
+TD_Icosaedre/LecteurTraj/lecture.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/TD_Icosaedre/LecteurTraj/lecture.cpp.i
+.PHONY : TD_Icosaedre/LecteurTraj/lecture.cpp.i
+
+TD_Icosaedre/LecteurTraj/lecture.s: TD_Icosaedre/LecteurTraj/lecture.cpp.s
+.PHONY : TD_Icosaedre/LecteurTraj/lecture.s
+
+# target to generate assembly for a file
+TD_Icosaedre/LecteurTraj/lecture.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code01_trajectoire.dir/build.make CMakeFiles/code01_trajectoire.dir/TD_Icosaedre/LecteurTraj/lecture.cpp.s
+.PHONY : TD_Icosaedre/LecteurTraj/lecture.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -490,6 +602,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... code01_dessin"
+	@echo "... code01_trajectoire"
 	@echo "... code02_dessin"
 	@echo "... code03_dessin"
 	@echo "... code04_dessin"
@@ -497,9 +610,15 @@ help:
 	@echo "... code05_exo"
 	@echo "... code05_ico"
 	@echo "... lapin"
+	@echo "... Common/lecture_trajectoire.o"
+	@echo "... Common/lecture_trajectoire.i"
+	@echo "... Common/lecture_trajectoire.s"
 	@echo "... Common/shaders_utilities.o"
 	@echo "... Common/shaders_utilities.i"
 	@echo "... Common/shaders_utilities.s"
+	@echo "... Common/xdrfile.o"
+	@echo "... Common/xdrfile.i"
+	@echo "... Common/xdrfile.s"
 	@echo "... Cours1/code01_dessin.o"
 	@echo "... Cours1/code01_dessin.i"
 	@echo "... Cours1/code01_dessin.s"
@@ -527,6 +646,12 @@ help:
 	@echo "... Cours1/modele.o"
 	@echo "... Cours1/modele.i"
 	@echo "... Cours1/modele.s"
+	@echo "... TD_Icosaedre/LecteurTraj/code01_trajectoire.o"
+	@echo "... TD_Icosaedre/LecteurTraj/code01_trajectoire.i"
+	@echo "... TD_Icosaedre/LecteurTraj/code01_trajectoire.s"
+	@echo "... TD_Icosaedre/LecteurTraj/lecture.o"
+	@echo "... TD_Icosaedre/LecteurTraj/lecture.i"
+	@echo "... TD_Icosaedre/LecteurTraj/lecture.s"
 .PHONY : help
 
 
