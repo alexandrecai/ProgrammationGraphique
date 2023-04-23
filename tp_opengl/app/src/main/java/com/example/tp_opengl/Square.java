@@ -91,7 +91,7 @@ public class Square {
             1.0f,  -1.0f, 0.0f,
             1.f,  1.f, 0.0f };
     // Le tableau des couleurs
-    static float squareColors[] = {
+    private float squareColors[] = { // green by default - removable
              0.0f,  1.0f, 0.0f, 1.0f,
              0.0f,  1.0f, 0.0f, 1.0f,
              0.0f,  1.0f, 0.0f, 1.0f,
@@ -106,8 +106,7 @@ public class Square {
 
     private final float Position[] = {0.0f,0.0f};
 
-    public Square(float[] Pos) {
-
+    public Square(float[] Pos, float[] Color){
         Position[0] = Pos[0];
         Position[1] = Pos[1];
         // initialisation du buffer pour les vertex (4 bytes par float)
@@ -119,10 +118,10 @@ public class Square {
 
 
         // initialisation du buffer pour les couleurs (4 bytes par float)
-        ByteBuffer bc = ByteBuffer.allocateDirect(squareColors.length * 4);
+        ByteBuffer bc = ByteBuffer.allocateDirect(Color.length * 4);
         bc.order(ByteOrder.nativeOrder());
         colorBuffer = bc.asFloatBuffer();
-        colorBuffer.put(squareColors);
+        colorBuffer.put(Color);
         colorBuffer.position(0);
 
         // initialisation du buffer des indices
@@ -145,8 +144,14 @@ public class Square {
         GLES30.glAttachShader(IdProgram, fragmentShader); // add the fragment shader to program
         GLES30.glLinkProgram(IdProgram);                  // create OpenGL program executables
         GLES30.glGetProgramiv(IdProgram, GLES30.GL_LINK_STATUS,linkStatus,0);
+    }
 
-
+    public Square(float[] Pos) {
+        this(Pos, new float[]{ // set square default color to green
+                0.0f,  1.0f, 0.0f, 1.0f,
+                0.0f,  1.0f, 0.0f, 1.0f,
+                0.0f,  1.0f, 0.0f, 1.0f,
+                0.0f,  1.0f, 0.0f, 1.0f });
     }
 
 

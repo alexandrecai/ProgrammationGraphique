@@ -28,16 +28,30 @@ import android.util.Log;
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "MyGLRenderer";
+
+    /*
+    Taille possible de grid (les plus communes) :
+    7x15
+    8x16
+    10x20
+
+     */
+
+    private final int nbRowGrid = 15;
+    private final int nbColumnGrid = 7;
+
+    private final Square[][] grid = new Square[nbColumnGrid+2][nbRowGrid+1];
+/*
     private Square mSquare;
     private Square mSquare2;
+
+ */
 
     // Les matrices habituelles Model/View/Projection
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
-    private final float[] mModelMatrix = new float[16];
-
 
     private float[] mSquarePosition = {0.0f, 0.0f};
 
@@ -51,15 +65,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // la couleur du fond d'écran
         GLES30.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        /* on va définir une classe Square pour dessiner des carrés */
-        mSquare = new Square(mSquarePosition);
     }
 
     /* Deuxième méthode équivalente à la fonction Display */
     @Override
     public void onDrawFrame(GL10 unused) {
-        float[] scratch = new float[16]; // pour stocker une matrice
-        // pour stocker une matrice
 
         // glClear rien de nouveau on vide le buffer de couleur et de profondeur */
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
@@ -76,43 +86,53 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        Matrix.setIdentityM(mModelMatrix,0);
+        // ##### GRID DISPLAY #####
 
-        /* Pour définir une translation on donne les paramètres de la translation
-        et la matrice (ici mModelMatrix) est multipliée par la translation correspondante
-         */
-        Matrix.translateM(mModelMatrix, 0, mSquarePosition[0], mSquarePosition[1], 0);
+        float[] gridColor = { // BLUE
+                0.0f,  0.0f, 1.0f, 1.0f,
+                0.0f,  0.0f, 1.0f, 1.0f,
+                0.0f,  0.0f, 1.0f, 1.0f,
+                0.0f,  0.0f, 1.0f, 1.0f
+        };
+        float[] gridBorderColor = { // WHITE
+                1.0f,  1.0f, 1.0f, 1.0f,
+                1.0f,  1.0f, 1.0f, 1.0f,
+                1.0f,  1.0f, 1.0f, 1.0f,
+                1.0f,  1.0f, 1.0f, 1.0f
+        };
 
-        Log.d("Renderer", "mSquarex"+Float.toString(mSquarePosition[0]));
-        Log.d("Renderer", "mSquarey"+Float.toString(mSquarePosition[1]));
+        Log.d(TAG, "center x axis : " + (grid.length-1));
+        for (int i = 0; i < grid.length; i++){
+            for (int j = 0; j < grid[0].length; j++){
+                Log.d(TAG, "Grid : [" + i + "][" + j + "]");
+                float[] gridSquareMatrix = new float[16];
+                float[] gridSquarePos = {
+                        (2.0f*i)-((grid.length-1)*1.0f),
+                        -1.0f*(2.0f*j-((grid[0].length-1)*1.0f)) // On inverse l'axe y
+                };
 
-        /* scratch est la matrice PxVxM finale */
-        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mModelMatrix, 0);
+                // On met la bordure de la grille en blanc
+                if (i == 0 || i == grid.length-1 || j == grid[0].length -1){
+                    grid[i][j] = new Square(gridSquarePos, gridBorderColor);
+                    Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
+                }
+                else {
+                    grid[i][j] = new Square(gridSquarePos, gridColor);
+                }
+
+                float[] gridScratch = new float[16];
+
+                Matrix.setIdentityM(gridSquareMatrix,0);
+
+                Matrix.translateM(gridSquareMatrix, 0, gridSquarePos[0], gridSquarePos[1], 0);
+
+                Matrix.multiplyMM(gridScratch, 0, mMVPMatrix, 0, gridSquareMatrix, 0);
+
+                grid[i][j].draw(gridScratch);
 
 
-        /* on appelle la méthode dessin du carré élémentaire */
-        mSquare.draw(scratch);
-
-        //################################################################################################
-
-        for(int i = 0; i<5;i++){
-            float[] mModelMatrix2 = new float[16];
-            float[] mSquarePosition2 = {2.0f*i, 2.0f*i};
-            mSquare2 = new Square(mSquarePosition2);
-            float[] scratch2 = new float[16];
-
-            Matrix.setIdentityM(mModelMatrix2,0);
-
-            Matrix.translateM(mModelMatrix2, 0, mSquarePosition2[0], mSquarePosition2[1], 0);
-
-            Log.d("Renderer", "mSquarex"+i+" "+Float.toString(mSquarePosition2[0]));
-            Log.d("Renderer", "mSquarey"+i+" "+Float.toString(mSquarePosition2[1]));
-
-            Matrix.multiplyMM(scratch2, 0, mMVPMatrix, 0, mModelMatrix2, 0);
-
-            mSquare2.draw(scratch2);
+            }
         }
-
 
     }
 
@@ -145,14 +165,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     /* Les méthodes nécessaires à la manipulation de la position finale du carré */
     public void setPosition(float x, float y) {
         /*mSquarePosition[0] += x;
-        mSquarePosition[1] += y;*/
+        mSquarePosition[1] += y;
         mSquarePosition[0] = x;
         mSquarePosition[1] = y;
-
+*/
     }
 
     public float[] getPosition() {
-        return mSquarePosition;
+        //return mSquarePosition;
+        return new float[]{};
     }
 
 }
