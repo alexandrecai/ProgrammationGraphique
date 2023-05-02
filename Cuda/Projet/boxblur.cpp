@@ -3,7 +3,9 @@
 #include <IL/il.h>
 
 int main() {
+
     unsigned int image;
+
     ilInit();
     ilGenImages(1, &image);
     ilBindImage(image);
@@ -19,69 +21,46 @@ int main() {
     // Récupération des données de l'image
     unsigned char* data = ilGetData();
 
-    // Création du tableau de sortie
-    unsigned char* out = new unsigned char[width * height * bpp];
+    // Traitement de l'image
+    unsigned char* out_blur = new unsigned char[width * height];
 
-    // Paramètres du filtre
-    int radius = 3;
-    int kernelSize = 2 * radius + 1;
-    float kernelSum = kernelSize * kernelSize;
+    // Matrice de convolution 1/9
+    float kernel[3][3] = {
+            {1.0f/9.0f, 1.0f/9.0f, 1.0f/9.0f},
+            {1.0f/9.0f, 1.0f/9.0f, 1.0f/9.0f},
+            {1.0f/9.0f, 1.0f/9.0f, 1.0f/9.0f}
+    };
+
+    int i, j, k, l;
+    float sum;
 
     // Parcours de l'image
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
+    for (j = 1; j < height - 1; ++j) {
+        for (i = 1; i < width - 1; ++i) {
 
-            // Initialisation des variables pour la somme des pixels dans le noyau
-            float r_sum = 0.0f;
-            float g_sum = 0.0f;
-            float b_sum = 0.0f;
+            sum = 0.0f;
 
-            // Parcours du noyau centré sur le pixel courant
-            for (int j = -radius; j <= radius; ++j) {
-                for (int i = -radius; i <= radius; ++i) {
-
-                    // Calcul des coordonnées du pixel à ajouter à la somme
-                    int xx = x + i;
-                    int yy = y + j;
-
-                    // Gestion des bords de l'image
-                    xx = std::max(0, std::min(xx, width - 1));
-                    yy = std::max(0, std::min(yy, height - 1));
-
-                    // Récupération de la couleur du pixel à ajouter à la somme
-                    int idx = (yy * width + xx) * bpp;
-                    float r = data[idx];
-                    float g = data[idx + 1];
-                    float b = data[idx + 2];
-
-                    // Ajout du pixel à la somme
-                    r_sum += r;
-                    g_sum += g;
-                    b_sum += b;
+            // Parcours de la matrice de convolution
+            for (k = -1; k <= 1; ++k) {
+                for (l = -1; l <= 1; ++l) {
+                    sum += kernel[k+1][l+1] * data[((j+k)*width + (i+l))*bpp];
                 }
             }
 
-            // Calcul de la couleur moyenne dans le noyau
-            unsigned char r = static_cast<unsigned char>(r_sum / kernelSum);
-            unsigned char g = static_cast<unsigned char>(g_sum / kernelSum);
-            unsigned char b = static_cast<unsigned char>(b_sum / kernelSum);
-
-            // Stockage de la couleur moyenne dans le tableau de sortie
-            int idx = (y * width + x) * bpp;
-            out[idx] = r;
-            out[idx + 1] = g;
-            out[idx + 2] = b;
+            out_blur[j*width + i] = (unsigned char)sum;
         }
     }
 
     // Placement des données dans l'image
-    ilTexImage(width, height, 1, bpp, format, IL_UNSIGNED_BYTE, out);
+    ilTexImage(width, height, 1, bpp, format, IL_UNSIGNED_BYTE, out_blur);
 
     // Sauvegarde de l'image
     ilEnable(IL_FILE_OVERWRITE);
     ilSaveImage("out.jpg");
 
+    // Libération de la mémoire
     ilDeleteImages(1, &image);
-    delete[] out;
+    delete[] out_blur;
+
     return 0;
 }
