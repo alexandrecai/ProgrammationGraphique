@@ -86,10 +86,10 @@ public class Square {
      */
 
     static float squareCoords[] = {
-            -1.0f,   1.0f, 0.0f,
-            -1.0f,  -1.0f, 0.0f,
-            1.0f,  -1.0f, 0.0f,
-            1.f,  1.f, 0.0f };
+            -1.0f,   1.0f, 0.0f, //haut gauche
+            -1.0f,  -1.0f, 0.0f,  //bas gauche
+            1.0f,  -1.0f, 0.0f,  //bas droit
+            1.f,  1.f, 0.0f };  //haut droit
     // Le tableau des couleurs
     static float squareColors[] = {
             1.0f,  0.0f, 0.0f, 1.0f,
@@ -204,6 +204,11 @@ public class Square {
         Position[0]=pos[0];
         Position[1]=pos[1];
     }
+
+    public float[] get_position() {
+        return Position;
+    }
+
     /* La fonction Display */
     public void draw(float[] mvpMatrix) {
         // Add program to OpenGL environment
