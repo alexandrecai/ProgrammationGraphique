@@ -23,6 +23,13 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.example.tp_opengl.blocks.IBlock;
+import com.example.tp_opengl.blocks.JBlock;
+import com.example.tp_opengl.blocks.LBlock;
+import com.example.tp_opengl.blocks.OBlock;
+import com.example.tp_opengl.blocks.SBlock;
+import com.example.tp_opengl.blocks.TBlock;
+import com.example.tp_opengl.blocks.ZBlock;
 import com.example.tp_opengl.constants.Colors;
 
 /* MyGLRenderer implémente l'interface générique GLSurfaceView.Renderer */
@@ -103,6 +110,31 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 1.0f,  1.0f, 1.0f, 1.0f
         };
 
+        float[] gridSquarePosTest = {
+                -2.0f,
+                0.0f // On inverse l'axe y
+        };
+
+        float[] gridSquareMatrixTest = new float[16];
+
+        float[] gridScratchTest = new float[16];
+
+        TBlock barre = new TBlock(gridSquarePosTest,Colors.red);
+        barre.rotate();
+        //barre.rotate();
+        //barre.rotate();
+        //barre.rotate();
+        barre.display(mMVPMatrix);
+
+        float[] gridSquarePosTest2 = {
+                2.0f,
+                -8.0f // On inverse l'axe y
+        };
+
+        OBlock lBlock = new OBlock(gridSquarePosTest2,Colors.yellow);
+
+        lBlock.display(mMVPMatrix);
+
         Log.d(TAG, "center x axis : " + (grid.length-1));
         for (int i = 0; i < grid.length; i++){
             for (int j = 0; j < grid[0].length; j++){
@@ -117,20 +149,24 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 if (i == 0 || i == grid.length-1 || j == grid[0].length -1){
                     grid[i][j] = new Square(gridSquarePos, Colors.white);
                     Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
+                    float[] gridScratch = new float[16];
+
+                    Matrix.setIdentityM(gridSquareMatrix,0);
+
+                    Matrix.translateM(gridSquareMatrix, 0, gridSquarePos[0], gridSquarePos[1], 0);
+
+                    Matrix.multiplyMM(gridScratch, 0, mMVPMatrix, 0, gridSquareMatrix, 0);
+
+                    grid[i][j].draw(gridScratch);
                 }
+                /*
                 else {
                     grid[i][j] = new Square(gridSquarePos, Colors.cyan);
                 }
 
-                float[] gridScratch = new float[16];
 
-                Matrix.setIdentityM(gridSquareMatrix,0);
+                 */
 
-                Matrix.translateM(gridSquareMatrix, 0, gridSquarePos[0], gridSquarePos[1], 0);
-
-                Matrix.multiplyMM(gridScratch, 0, mMVPMatrix, 0, gridSquareMatrix, 0);
-
-                grid[i][j].draw(gridScratch);
 
 
             }
