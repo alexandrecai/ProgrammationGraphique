@@ -5,10 +5,10 @@ LDLIBS2=-lm -lIL
 
 all: sobel sobel-cu
 
-sobel: sobel.cpp
+sobel: boxblur.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDLIBS2)
 
-sobel-cu: sobel.cu
+sobel-cu: boxblur.cu
 	nvcc -o $@ $<  $(LDLIBS1)
 
 .PHONY: clean
