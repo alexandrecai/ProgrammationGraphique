@@ -36,14 +36,19 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     private final MyGLRenderer mRenderer;
 
-    public MyGLSurfaceView(Context context) {
+
+
+    public MyGLSurfaceView(Context context, int nbRowGrid, int nbColumnGrid) {
         super(context);
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         // Création d'un context OpenGLES 3.0
         setEGLContextClientVersion(3);
 
+        Log.d("MyGLSurfaceView", String.valueOf(nbRowGrid));
+        Log.d("MyGLSurfaceView", String.valueOf(nbColumnGrid));
+
         // Création du renderer qui va être lié au conteneur View créé
-        mRenderer = new MyGLRenderer();
+        mRenderer = new MyGLRenderer(nbRowGrid, nbColumnGrid);
         setRenderer(mRenderer);
 
         // Option pour indiquer qu'on redessine uniquement si les données changent
@@ -58,67 +63,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
     /* Comment interpréter les événements sur l'écran tactile */
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        // Les coordonnées du point touché sur l'écran
-        float x = e.getX();
-        float y = e.getY();
-
-        // la taille de l'écran en pixels
-        float screen_x = getWidth();
-        float screen_y = getHeight();
-
-
-
-        // Des messages si nécessaires */
-        Log.d("message", "x"+Float.toString(x));
-        Log.d("message", "y"+Float.toString(y));
-        Log.d("message", "screen_x="+Float.toString(screen_x));
-        Log.d("message", "screen_y="+Float.toString(screen_y));
-
-
-        /* accès aux paramètres du rendu (cf MyGLRenderer.java)
-        soit la position courante du centre du carré
-         */
-        float[] pos = mRenderer.getPosition();
-
-        /* Conversion des coordonnées pixel en coordonnées OpenGL
-        Attention l'axe x est inversé par rapport à OpenGLSL
-        On suppose que l'écran correspond à un carré d'arête 2 centré en 0
-         */
-
-        float x_opengl = 20.0f*x/getWidth() - 10.0f;
-        float y_opengl = -20.0f*y/getHeight() + 10.0f;
-
-        Log.d("message","x_opengl="+Float.toString(x_opengl));
-        Log.d("message","y_opengl="+Float.toString(y_opengl));
-
-        /* Le carré représenté a une arête de 2 (oui il va falloir changer cette valeur en dur !!)
-        /* On teste si le point touché appartient au carré ou pas car on ne doit le déplacer que si ce point est dans le carré
-        */
-
-        boolean test_square = ((x_opengl < pos[0]+1.0) && (x_opengl > pos[0]-1.0) && (y_opengl < pos[1]+1.0) && (y_opengl > pos[1]-1.0));
-
-        Log.d("message","test_square="+Boolean.toString(test_square));
-        Log.d("message","condition="+Boolean.toString(condition));
-
-        if (condition || test_square) {
-
-            switch (e.getAction()) {
-                /* Lorsqu'on touche l'écran on mémorise juste le point */
-                case MotionEvent.ACTION_DOWN:
-                    mPreviousX = x;
-                    mPreviousY = y;
-                    //mRenderer.setPosition(0.0f,+20f);
-                    //requestRender();
-                    condition=false;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    Log.d("getHeight","getHeight : "+String.valueOf(getHeight()));
-                    mRenderer.setPosition(0.0f,-20f);
-                    requestRender(); // Pour relancer le dessin
-                    condition=false;
-
-            }
-        }
 
         return true;
     }

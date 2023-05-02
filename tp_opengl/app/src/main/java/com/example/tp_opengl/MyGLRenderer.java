@@ -38,6 +38,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "MyGLRenderer";
 
+    private int nbRowGrid;
+    private int nbColumnGrid;
+
     /*
     Taille possible de grid (les plus communes) :
     7x15
@@ -45,11 +48,19 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     10x20
 
      */
-    private final float squareSize = 1.0f;
-    private final int nbRowGrid = 15;
-    private final int nbColumnGrid = 7;
 
-    private final Square[][] grid = new Square[nbColumnGrid+2][nbRowGrid+1];
+    public MyGLRenderer(int nbRowGrid, int nbColumnGrid) {
+        Log.d(TAG, "Oh le beau renderer");
+        this.nbRowGrid = nbRowGrid;
+        this.nbColumnGrid = nbColumnGrid;
+
+        Log.d("MyGLRenderer", String.valueOf(nbRowGrid));
+        Log.d("MyGLRenderer", String.valueOf(nbColumnGrid));
+    }
+
+    private final float squareSize = 1.0f;
+
+    private Square[][] grid;
 /*
     private Square mSquare;
     private Square mSquare2;
@@ -79,6 +90,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     /* Deuxième méthode équivalente à la fonction Display */
     @Override
     public void onDrawFrame(GL10 unused) {
+
+        grid = new Square[nbColumnGrid+2][nbRowGrid+1];
 
         // glClear rien de nouveau on vide le buffer de couleur et de profondeur */
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
