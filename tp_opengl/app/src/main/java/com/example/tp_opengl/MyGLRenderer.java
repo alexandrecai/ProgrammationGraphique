@@ -23,6 +23,8 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.example.tp_opengl.constants.Colors;
+
 /* MyGLRenderer implémente l'interface générique GLSurfaceView.Renderer */
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
@@ -113,11 +115,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
                 // On met la bordure de la grille en blanc
                 if (i == 0 || i == grid.length-1 || j == grid[0].length -1){
-                    grid[i][j] = new Square(gridSquarePos, gridBorderColor);
+                    grid[i][j] = new Square(gridSquarePos, Colors.white);
                     Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
                 }
                 else {
-                    grid[i][j] = new Square(gridSquarePos, gridColor);
+                    grid[i][j] = new Square(gridSquarePos, Colors.cyan);
                 }
 
                 float[] gridScratch = new float[16];
