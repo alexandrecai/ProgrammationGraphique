@@ -45,7 +45,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     10x20
 
      */
-
+    private final float squareSize = 1.0f;
     private final int nbRowGrid = 15;
     private final int nbColumnGrid = 7;
 
@@ -119,7 +119,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         float[] gridScratchTest = new float[16];
 
-        TBlock barre = new TBlock(gridSquarePosTest,Colors.red);
+        TBlock barre = new TBlock(gridSquarePosTest,Colors.red,squareSize);
         barre.rotate();
         //barre.rotate();
         //barre.rotate();
@@ -131,7 +131,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 -8.0f // On inverse l'axe y
         };
 
-        OBlock lBlock = new OBlock(gridSquarePosTest2,Colors.yellow);
+        OBlock lBlock = new OBlock(gridSquarePosTest2,Colors.yellow,squareSize);
 
         lBlock.display(mMVPMatrix);
 
@@ -147,7 +147,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
                 // On met la bordure de la grille en blanc
                 if (i == 0 || i == grid.length-1 || j == grid[0].length -1){
-                    grid[i][j] = new Square(gridSquarePos, Colors.white);
+                    grid[i][j] = new Square(gridSquarePos, Colors.white, squareSize);
                     Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
                     float[] gridScratch = new float[16];
 

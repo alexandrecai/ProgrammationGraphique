@@ -85,11 +85,7 @@ public class Square {
      Oui ce n'est pas joli avec 1.0 en dur ....
      */
 
-    static float squareCoords[] = {
-            -1.0f,   1.0f, 0.0f, //haut gauche
-            -1.0f,  -1.0f, 0.0f,  //bas gauche
-            1.0f,  -1.0f, 0.0f,  //bas droit
-            1.f,  1.f, 0.0f };  //haut droit
+
     // Le tableau des couleurs
     static float squareColors[] = {
             1.0f,  0.0f, 0.0f, 1.0f,
@@ -152,7 +148,14 @@ public class Square {
 
     */
 
-    public Square(float[] Pos, float[] Color){
+    public Square(float[] Pos, float[] Color,float size){
+
+        float squareCoords[] = {
+                -size,   size, 0.0f, //haut gauche
+                -size,  -size, 0.0f,  //bas gauche
+                size,  -size, 0.0f,  //bas droit
+                size,  size, 0.0f };  //haut droit
+
         Position[0] = Pos[0];
         Position[1] = Pos[1];
         // initialisation du buffer pour les vertex (4 bytes par float)
@@ -192,12 +195,12 @@ public class Square {
         GLES30.glGetProgramiv(IdProgram, GLES30.GL_LINK_STATUS,linkStatus,0);
     }
 
-    public Square(float[] Pos) {
+    public Square(float[] Pos , float size) {
         this(Pos, new float[]{ // set square default color to green
                 0.0f,  1.0f, 0.0f, 1.0f,
                 0.0f,  1.0f, 0.0f, 1.0f,
                 0.0f,  1.0f, 0.0f, 1.0f,
-                0.0f,  1.0f, 0.0f, 1.0f });
+                0.0f,  1.0f, 0.0f, 1.0f },size);
     }
 
     public void set_position(float[] pos) {

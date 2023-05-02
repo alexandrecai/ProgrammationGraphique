@@ -10,18 +10,18 @@ public class LBlock {
     Square[] squares;
     float[] squareColors;
 
-    public LBlock(float[] firstSquarePos, float[] squareColors) {
+    public LBlock(float[] firstSquarePos, float[] squareColors,float size) {
         this.squares = new Square[4];
         Square square;
         float[] pos = firstSquarePos;
-        this.squares[0] = new Square(pos,squareColors);
-        pos[0] = firstSquarePos[0]+2.0f;
-        this.squares[1] = new Square(pos,squareColors);
-        pos[0] = firstSquarePos[0]-2.0f;
-        pos[1] = firstSquarePos[1]+2.0f;
-        this.squares[2] = new Square(pos,squareColors);
-        pos[1] = pos[1] + 2.0f;
-        this.squares[3] = new Square(pos,squareColors);
+        this.squares[0] = new Square(pos,squareColors,size);
+        pos[0] = firstSquarePos[0]+2*size;
+        this.squares[1] = new Square(pos,squareColors,size);
+        pos[0] = firstSquarePos[0]-2*size;
+        pos[1] = firstSquarePos[1]+2*size;
+        this.squares[2] = new Square(pos,squareColors,size);
+        pos[1] = pos[1] +2*size;
+        this.squares[3] = new Square(pos,squareColors,size);
         this.firstSquarePos = firstSquarePos;
         this.squareColors = squareColors;
     }

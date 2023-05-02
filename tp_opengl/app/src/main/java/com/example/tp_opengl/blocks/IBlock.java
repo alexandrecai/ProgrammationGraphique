@@ -11,17 +11,17 @@ public class IBlock {
     Square[] squares;
     float[] squareColors;
 
-    public IBlock(float[] firstSquarePos, float[] squareColors) {
+    public IBlock(float[] firstSquarePos, float[] squareColors,float size) {
         this.squares = new Square[4];
         Square square;
         float[] pos = firstSquarePos;
         for(int i = 0;i<4;i++){
             if(i == 0){
-                square = new Square(firstSquarePos, squareColors);
+                square = new Square(firstSquarePos, squareColors,size);
             }
             else {
-                pos[0] = pos[0]+2.0f;
-                square = new Square(pos,squareColors);
+                pos[0] = pos[0]+2*size;
+                square = new Square(pos,squareColors,size);
             }
             this.squares[i] = square;
         }
