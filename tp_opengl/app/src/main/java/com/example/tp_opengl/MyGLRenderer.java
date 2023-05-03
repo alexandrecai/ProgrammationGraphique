@@ -358,6 +358,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         if(lowestSquareY<=bottom.get_position()[1]+2*squareSize){
             allSquares.addAll(Arrays.asList(this.currentBlock.getSquares()));
             this.currentBlock = null;
+            this.deleteLines();
             return true;
         }
         return false;
@@ -375,6 +376,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 if(square.get_position()[0] == staticSquare.get_position()[0] && square.get_position()[1] == (staticSquare.get_position()[1] + 2*squareSize)){
                     allSquares.addAll(Arrays.asList(this.currentBlock.getSquares()));
                     this.currentBlock = null;
+                    this.deleteLines();
                     return true;
                 }
             }
@@ -410,4 +412,98 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void setGrid() {
         grid = new Square[nbColumnGrid + 2][nbRowGrid + 1];
     }
+
+    public boolean collisionLeft(){
+        for (Square square:this.currentBlock.getSquares()){
+            if(square.get_position()[0]-2*squareSize<=grid[0][0].get_position()[0]){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean collisionRight(){
+        for (Square square:this.currentBlock.getSquares()){
+            if(square.get_position()[0]+2*squareSize>=grid[grid.length-1][0].get_position()[0]){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void deleteLines(){
+        /*
+        float currentY = -1.0f * (2*squareSize * 10 - ((grid[0].length - 1) * 1.0f));
+        System.out.println("inDeleteLines");
+        List<Square> toDelete = new ArrayList<>();
+        for (Square squareToDelete:this.allSquares){
+            if(squareToDelete.get_position()[1] == currentY){
+                toDelete.add(squareToDelete);
+            }
+        }
+        List<Square> toAdd = new ArrayList<>();
+        for (Square squareToMove:this.allSquares){
+            if(squareToMove.get_position()[1] > currentY ){
+                Square newSquare = squareToMove;
+                toDelete.add(squareToMove);
+                //this.allSquares.remove(squareToMove);
+                float[] newPos = new float[]{
+                        newSquare.get_position()[0],
+                        newSquare.get_position()[1]-2*squareSize
+                };
+                newSquare.set_position(newPos);
+                toAdd.add(newSquare);
+
+            }
+        }
+        this.allSquares.addAll(toAdd);
+        allSquares.removeAll(toDelete);
+
+
+         */
+
+        for (int i = 0; i<nbRowGrid;i++){
+            int nbSquareInLine = 0;
+            float currentY = -1.0f * (2*squareSize * i - ((grid[0].length - 1) * 1.0f));
+            for (Square square:this.allSquares){
+                if(square.get_position()[1] == currentY){
+                    nbSquareInLine++;
+                }
+            }
+            if(nbSquareInLine==nbColumnGrid){
+                List<Square> toDelete = new ArrayList<>();
+                for (Square squareToDelete:this.allSquares){
+                    if(squareToDelete.get_position()[1] == currentY){
+                        toDelete.add(squareToDelete);
+                    }
+                }
+                List<Square> toAdd = new ArrayList<>();
+                for (Square squareToMove:this.allSquares){
+                    if(squareToMove.get_position()[1] > currentY ){
+                        Square newSquare = squareToMove;
+                        toDelete.add(squareToMove);
+                        //this.allSquares.remove(squareToMove);
+                        float[] newPos = new float[]{
+                                newSquare.get_position()[0],
+                                newSquare.get_position()[1]-2*squareSize
+                        };
+                        newSquare.set_position(newPos);
+                        toAdd.add(newSquare);
+
+                    }
+                }
+                allSquares.removeAll(toDelete);
+                this.allSquares.addAll(toAdd);
+                i--;
+            }
+
+
+
+        }
+
+
+
+    }
+
+
 }

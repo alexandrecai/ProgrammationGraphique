@@ -104,11 +104,15 @@ public class MyGLSurfaceView extends GLSurfaceView {
                         mIsSwiping = true;
                         if (deltaX < 0) {
                             Log.d(TAG + "event", "SWIPE LEFT");
-                            mRenderer.deplacerBlockGauche();
+                            if(!mRenderer.collisionLeft()) {
+                                mRenderer.deplacerBlockGauche();
+                            }
 
                         } else {
                             Log.d(TAG + "event", "SWIPE RIGHT");
-                            mRenderer.deplacerBlockDroite();
+                            if(!mRenderer.collisionRight()){
+                                mRenderer.deplacerBlockDroite();
+                            }
 
                         }
                     }
