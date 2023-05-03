@@ -61,6 +61,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
         // Création du renderer qui va être lié au conteneur View créé
         mRenderer = new MyGLRenderer(nbRowGrid, nbColumnGrid);
         setRenderer(mRenderer);
+        this.mRenderer.setGrid();
 
 
 
@@ -73,19 +74,10 @@ public class MyGLSurfaceView extends GLSurfaceView {
                 if(!mRenderer.isAtTheBottom() && !mRenderer.collision()){
                     mRenderer.descendreBlock();
                 }
-                else{
-                    mRenderer.createBlock();
-                }
                 requestRender();
             }
         }, 2000, 1000);
 
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                doubleAppui = 0;
-            }
-        }, 0, 1000);
     }
 
     /* pour gérer la translation */
@@ -114,13 +106,18 @@ public class MyGLSurfaceView extends GLSurfaceView {
          */
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                /*
                 doubleAppui++;
                 if(doubleAppui>=2){
-                    this.mRenderer.rotate();
+
                 }
                 else{
                     this.mRenderer.deplacerBlockGauche();
                 }
+
+                 */
+                //this.mRenderer.createBlock();
+                this.mRenderer.rotate();
 
                 // Vérifiez si le toucher se trouve dans la zone de votre bloc
                 /*

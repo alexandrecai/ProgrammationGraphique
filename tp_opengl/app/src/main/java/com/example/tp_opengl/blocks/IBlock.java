@@ -54,8 +54,8 @@ public class IBlock implements Block{
 
     public void rotate() {
         // On calcule la position du centre de la barre
-        float centerX = this.squares[2].get_position()[0];
-        float centerY = this.squares[2].get_position()[1];
+        float centerX = this.squares[0].get_position()[0];
+        float centerY = this.squares[0].get_position()[1];
 
         // Pour chaque carré de la barre
         for (int i = 0; i < 4; i++) {
