@@ -336,6 +336,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         this.nbRotation ++;
     }
 
+    public boolean collision(){
+
+        for(Square square: this.currentBlock.getSquares()){
+            for (Square staticSquare: this.allSquares){
+                if(square.get_position()[0] == staticSquare.get_position()[0] && square.get_position()[1] == (staticSquare.get_position()[1] + 2*squareSize)){
+                    allSquares.addAll(Arrays.asList(this.currentBlock.getSquares()));
+                    return true;
+                }
+            }
+        }
+
+
+        return false;
+    }
+
     public void createBlock(){
         float[] initPos = new float[]{
                 (2*squareSize * 4) - ((grid.length - 1) * 1.0f),

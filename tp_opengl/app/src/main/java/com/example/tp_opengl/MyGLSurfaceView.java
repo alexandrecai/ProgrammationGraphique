@@ -40,6 +40,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
     private final MyGLRenderer mRenderer;
 
     Timer timer = new Timer();
+    int doubleAppui = 0;
+    Timer timerDoubleClick = new Timer();
 
     public MyGLSurfaceView(Context context, MyGLRenderer mRenderer, Timer timer) {
         super(context);
@@ -68,7 +70,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!mRenderer.isAtTheBottom()){
+                if(!mRenderer.isAtTheBottom() && !mRenderer.collision()){
                     mRenderer.descendreBlock();
                 }
                 else{
@@ -77,6 +79,13 @@ public class MyGLSurfaceView extends GLSurfaceView {
                 requestRender();
             }
         }, 2000, 1000);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                doubleAppui = 0;
+            }
+        }, 0, 1000);
     }
 
     /* pour gérer la translation */
@@ -105,6 +114,14 @@ public class MyGLSurfaceView extends GLSurfaceView {
          */
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                doubleAppui++;
+                if(doubleAppui>=2){
+                    this.mRenderer.rotate();
+                }
+                else{
+                    this.mRenderer.deplacerBlockGauche();
+                }
+
                 // Vérifiez si le toucher se trouve dans la zone de votre bloc
                 /*
                 if (x >= bloc.x && x < bloc.x + bloc.width && y >= bloc.y && y < bloc.y + bloc.height) {
@@ -121,7 +138,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
 
 
-                this.mRenderer.rotate();
+
                 //requestRender();
 
 
