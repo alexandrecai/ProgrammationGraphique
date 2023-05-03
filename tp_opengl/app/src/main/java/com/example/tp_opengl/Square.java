@@ -56,9 +56,11 @@ public class Square {
                     "float x = Position.x;\n"+
                     "float y = Position.y;\n"+
                     "float test = x*x+y*y;\n"+
-                    //"if (test>1.0) \n"+
-                    //"discard;\n"+
-                    "fragColor = Couleur;\n" +
+                    "if (x < 0.97 && x > -0.97 && y < 0.97 && y > -0.97) {\n"+
+                    "   fragColor = Couleur;\n" +
+                    "} else {\n"+
+                    "   fragColor = vec4(0.0, 0.0, 0.0, 1.0);\n"+
+                    "}\n"+
                     "}\n";
 
     /* les déclarations pour l'équivalent des VBO */
@@ -101,52 +103,8 @@ public class Square {
     private final int couleurStride = COULEURS_PER_VERTEX * 4; // le pas entre 2 couleurs
 
     private final float Position[] = {0.0f,0.0f};
-/*
-    public Square(float[] Pos) {
-
-        Position[0] = Pos[0];
-        Position[1] = Pos[1];
-        // initialisation du buffer pour les vertex (4 bytes par float)
-        ByteBuffer bb = ByteBuffer.allocateDirect(squareCoords.length * 4);
-        bb.order(ByteOrder.nativeOrder());
-        vertexBuffer = bb.asFloatBuffer();
-        vertexBuffer.put(squareCoords);
-        vertexBuffer.position(0);
 
 
-        // initialisation du buffer pour les couleurs (4 bytes par float)
-        ByteBuffer bc = ByteBuffer.allocateDirect(squareColors.length * 4);
-        bc.order(ByteOrder.nativeOrder());
-        colorBuffer = bc.asFloatBuffer();
-        colorBuffer.put(squareColors);
-        colorBuffer.position(0);
-
-        // initialisation du buffer des indices
-        ByteBuffer dlb = ByteBuffer.allocateDirect(Indices.length * 2);
-        dlb.order(ByteOrder.nativeOrder());
-        indiceBuffer = dlb.asShortBuffer();
-        indiceBuffer.put(Indices);
-        indiceBuffer.position(0);
-
-        // Chargement des shaders
-        /*
-       // int vertexShader = MyGLRenderer.loadShader(
-         //       GLES30.GL_VERTEX_SHADER,
-          //      vertexShaderCode);
-        //int fragmentShader = MyGLRenderer.loadShader(
-          //      GLES30.GL_FRAGMENT_SHADER,
-           //     fragmentShaderCode);
-
-        IdProgram = GLES30.glCreateProgram();             // create empty OpenGL Program
-        GLES30.glAttachShader(IdProgram, vertexShader);   // add the vertex shader to program
-        GLES30.glAttachShader(IdProgram, fragmentShader); // add the fragment shader to program
-        GLES30.glLinkProgram(IdProgram);                  // create OpenGL program executables
-        GLES30.glGetProgramiv(IdProgram, GLES30.GL_LINK_STATUS,linkStatus,0);
-
-
-    }
-
-    */
 
     public Square(float[] Pos, float[] Color,float size){
 
