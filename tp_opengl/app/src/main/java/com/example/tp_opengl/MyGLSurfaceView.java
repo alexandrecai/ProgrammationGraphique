@@ -17,6 +17,7 @@
 package com.example.tp_opengl;
 
 import android.content.Context;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -51,6 +52,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     Timer timer = new Timer();
 
+    private int score = 0;
+
 
     public MyGLSurfaceView(Context context, int nbRowGrid, int nbColumnGrid) {
         super(context);
@@ -74,10 +77,19 @@ public class MyGLSurfaceView extends GLSurfaceView {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!mRenderer.isAtTheBottom() && !mRenderer.collision()){
-                    mRenderer.descendreBlock();
+                if(!mRenderer.isEnded()){
+                    if(!mRenderer.isAtTheBottom() && !mRenderer.collision()){
+                        mRenderer.descendreBlock();
+                    }
+                    requestRender();
                 }
-                requestRender();
+                else {
+                    score=mRenderer.getScore();
+                    Intent intent = new Intent(getContext(), EndgameActivity.class);
+                    intent.putExtra("score", score);
+                    getContext().startActivity(intent);
+                    timer.cancel();
+                }
             }
         }, 2000, 1000);
 
@@ -128,4 +140,11 @@ public class MyGLSurfaceView extends GLSurfaceView {
         }
         return true;
     }
+
+    public int getScore() {
+        return score;
+    }
+
+
+
 }

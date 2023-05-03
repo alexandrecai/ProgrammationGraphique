@@ -56,6 +56,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     int randBlock = 4;
     float[] currentColor = Colors.green;
     Random random = new Random();
+    int score = 0;
 
 
 
@@ -129,58 +130,69 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
         // ##### GRID DISPLAY #####
+        if(!isEnded()){
+            System.out.println("Rand in draw : " + this.randBlock);
+            float[] gridSquarePos2;
+            try{
+                gridSquarePos2 = new float[]{
+                        this.currentBlock.getSquares()[0].get_position()[0],
+                        this.currentBlock.getSquares()[0].get_position()[1]
+                };
+            }catch (Exception e){
+                score += 4;
+                this.nbRotation = 0;
+                this.randBlock = random.nextInt(7);
+                gridSquarePos2 = new float[]{
+                        (2*squareSize * 4) - ((grid.length - 1) * 1.0f),
+                        -1.0f * (2*squareSize - ((grid[0].length -1 ) * 1.0f))
+                };
+            }
 
 
-        System.out.println("Rand in draw : " + this.randBlock);
-        float[] gridSquarePos2;
-        try{
-            gridSquarePos2 = new float[]{
-                    this.currentBlock.getSquares()[0].get_position()[0],
-                    this.currentBlock.getSquares()[0].get_position()[1]
-            };
-        }catch (Exception e){
-            this.nbRotation = 0;
-            this.randBlock = random.nextInt(7);
-            gridSquarePos2 = new float[]{
-                    (2*squareSize * 4) - ((grid.length - 1) * 1.0f),
-                    -1.0f * (2*squareSize - ((grid[0].length - 1) * 1.0f))
-            };
+            switch(this.randBlock){
+                case 0:
+                    this.currentColor = Colors.red;
+                    this.currentBlock = new ZBlock(gridSquarePos2,this.currentColor,squareSize);
+                    break;
+                case 1:
+                    this.currentColor = Colors.cyan;
+                    this.currentBlock = new IBlock(gridSquarePos2,this.currentColor,squareSize);
+                    break;
+                case 2:
+                    this.currentColor = Colors.blue;
+                    this.currentBlock = new JBlock(gridSquarePos2,this.currentColor,squareSize);
+                    break;
+                case 3:
+                    this.currentColor = Colors.orange;
+                    this.currentBlock = new LBlock(gridSquarePos2,this.currentColor,squareSize);
+                    break;
+                case 4:
+                    this.currentColor = Colors.yellow;
+                    this.currentBlock = new OBlock(gridSquarePos2,this.currentColor,squareSize);
+                    break;
+                case 5:
+                    this.currentColor = Colors.green;
+                    this.currentBlock = new SBlock(gridSquarePos2,this.currentColor,squareSize);
+                    break;
+                case 6:
+                    this.currentColor = Colors.purple;
+                    this.currentBlock = new TBlock(gridSquarePos2,this.currentColor,squareSize);
+                    break;
+            }
+
+
+
+
+
+
+            System.out.println(this.currentBlock.getSquares()[0].get_position()[0]);
+
+            for (int i =0; i<nbRotation%4;i++){
+                this.currentBlock.rotate();
+            }
+
+            this.currentBlock.display(mMVPMatrix);
         }
-
-
-        switch(this.randBlock){
-            case 0:
-                this.currentColor = Colors.red;
-                this.currentBlock = new ZBlock(gridSquarePos2,this.currentColor,squareSize);
-                break;
-            case 1:
-                this.currentColor = Colors.cyan;
-                this.currentBlock = new IBlock(gridSquarePos2,this.currentColor,squareSize);
-                break;
-            case 2:
-                this.currentColor = Colors.blue;
-                this.currentBlock = new JBlock(gridSquarePos2,this.currentColor,squareSize);
-                break;
-            case 3:
-                this.currentColor = Colors.orange;
-                this.currentBlock = new LBlock(gridSquarePos2,this.currentColor,squareSize);
-                break;
-            case 4:
-                this.currentColor = Colors.yellow;
-                this.currentBlock = new OBlock(gridSquarePos2,this.currentColor,squareSize);
-                break;
-            case 5:
-                this.currentColor = Colors.green;
-                this.currentBlock = new SBlock(gridSquarePos2,this.currentColor,squareSize);
-                break;
-            case 6:
-                this.currentColor = Colors.purple;
-                this.currentBlock = new TBlock(gridSquarePos2,this.currentColor,squareSize);
-                break;
-        }
-
-
-
 
 
 
@@ -188,7 +200,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 
         //this.currentBlock = new TBlock(gridSquarePos2,this.currentColor,squareSize);
-        System.out.println(this.currentBlock.getSquares()[0].get_position()[0]);
+
 
 
         for(Square square: this.allSquares){
@@ -211,11 +223,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 
 
-        for (int i =0; i<nbRotation%4;i++){
-            this.currentBlock.rotate();
-        }
 
-        this.currentBlock.display(mMVPMatrix);
+
+
 
 
         Log.d(TAG, "center x axis : " + (grid.length - 1));
@@ -230,7 +240,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
                 // On met la bordure de la grille en blanc
                 if (i == 0 || i == grid.length - 1 || j == grid[0].length - 1) {
-                    grid[i][j] = new Square(gridSquarePos, Colors.white, squareSize);
+                    if(gridSquarePos[1] == (-1.0f * (2*squareSize - ((grid[0].length -1 ) * 1.0f)))){
+                        grid[i][j] = new Square(gridSquarePos, Colors.beige, squareSize);
+                    }
+                    else {
+                        grid[i][j] = new Square(gridSquarePos, Colors.white, squareSize);
+                    }
+
                     //Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
                     float[] gridScratch = new float[16];
 
@@ -494,6 +510,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 }
                 allSquares.removeAll(toDelete);
                 this.allSquares.addAll(toAdd);
+                score += 10;
                 i--;
             }
 
@@ -505,5 +522,17 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     }
 
+    public boolean isEnded(){
+        float limit = -1.0f * (2*squareSize - ((grid[0].length -1 ) * 1.0f));
+        for (Square square:this.allSquares){
+            if (square.get_position()[1]>= limit){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public int getScore() {
+        return score;
+    }
 }
