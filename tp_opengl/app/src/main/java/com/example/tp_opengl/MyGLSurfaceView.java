@@ -104,9 +104,11 @@ public class MyGLSurfaceView extends GLSurfaceView {
                         mIsSwiping = true;
                         if (deltaX < 0) {
                             Log.d(TAG + "event", "SWIPE LEFT");
+                            mRenderer.deplacerBlockGauche();
 
                         } else {
                             Log.d(TAG + "event", "SWIPE RIGHT");
+                            mRenderer.deplacerBlockDroite();
 
                         }
                     }
@@ -116,6 +118,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
             case MotionEvent.ACTION_UP:
                 if (!mIsSwiping) {
                     Log.d(TAG + "event", "SINGLE TAP");
+                    mRenderer.rotate();
                 }
                 return true;
         }
