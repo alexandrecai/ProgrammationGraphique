@@ -4,7 +4,7 @@ import android.opengl.Matrix;
 
 import com.example.tp_opengl.Square;
 
-public class ZBlock {
+public class ZBlock implements Block{
 
     float[] firstSquarePos;
     Square[] squares;
@@ -68,5 +68,11 @@ public class ZBlock {
         }
     }
 
+    public Square[] getSquares() {
+        return squares;
+    }
 
+    public void setSquares(Square[] squares) {
+        this.squares = squares;
+    }
 }

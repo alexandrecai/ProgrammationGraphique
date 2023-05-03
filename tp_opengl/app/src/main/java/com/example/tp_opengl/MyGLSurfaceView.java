@@ -21,6 +21,9 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /* La classe MyGLSurfaceView avec en particulier la gestion des événements
   et la création de l'objet renderer
 
@@ -36,7 +39,13 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     private final MyGLRenderer mRenderer;
 
+    Timer timer = new Timer();
 
+    public MyGLSurfaceView(Context context, MyGLRenderer mRenderer, Timer timer) {
+        super(context);
+        this.mRenderer = mRenderer;
+
+    }
 
     public MyGLSurfaceView(Context context, int nbRowGrid, int nbColumnGrid) {
         super(context);
@@ -51,8 +60,18 @@ public class MyGLSurfaceView extends GLSurfaceView {
         mRenderer = new MyGLRenderer(nbRowGrid, nbColumnGrid);
         setRenderer(mRenderer);
 
+
+
         // Option pour indiquer qu'on redessine uniquement si les données changent
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mRenderer.descendreBlock();
+                requestRender();
+            }
+        }, 1000, 1000);
     }
 
     /* pour gérer la translation */
@@ -63,6 +82,65 @@ public class MyGLSurfaceView extends GLSurfaceView {
     /* Comment interpréter les événements sur l'écran tactile */
     @Override
     public boolean onTouchEvent(MotionEvent e) {
+
+        float x = e.getX();
+        float y = e.getY();
+
+        // la taille de l'écran en pixels
+        float screen_x = getWidth();
+        float screen_y = getHeight();
+
+        /*
+        Log.d(TAG + "message", "x"+Float.toString(x));
+        Log.d(TAG + "message", "y"+Float.toString(y));
+        Log.d(TAG + "message", "screen_x="+Float.toString(screen_x));
+        Log.d(TAG + "message", "screen_y="+Float.toString(screen_y));
+
+
+         */
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // Vérifiez si le toucher se trouve dans la zone de votre bloc
+                /*
+                if (x >= bloc.x && x < bloc.x + bloc.width && y >= bloc.y && y < bloc.y + bloc.height) {
+                    // Le toucher est dans la zone de votre bloc, vous pouvez effectuer l'action souhaitée
+                    // ...
+                }
+
+                 */
+
+                //Log.d(TAG + " event", "DOWN");
+
+                // Faire la rotate ici
+
+
+
+
+                this.mRenderer.rotate();
+                requestRender();
+
+
+
+                break;
+
+            //case MotionEvent.ACTION
+
+            case MotionEvent.ACTION_MOVE:
+                // Effectuez l'action souhaitée lors du déplacement
+                // ...
+
+                //Log.d(TAG + " event", "MOVE");
+
+                // Déplacer horizontalement le block ici
+                System.out.println("x = " + x);
+                System.out.println("get = " + e.getX());
+                if(x + e.getX() < -200){
+                    this.mRenderer.deplacerBlockGauche();
+                    requestRender();
+                }
+
+                break;
+        }
 
         return true;
     }

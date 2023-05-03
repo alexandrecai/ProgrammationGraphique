@@ -23,6 +23,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.example.tp_opengl.blocks.Block;
 import com.example.tp_opengl.blocks.IBlock;
 import com.example.tp_opengl.blocks.JBlock;
 import com.example.tp_opengl.blocks.LBlock;
@@ -40,6 +41,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private int nbRowGrid;
     private int nbColumnGrid;
+    private final float squareSize = 1.0f;
+    private final float[] mMVPMatrix = new float[16];
+
+    private Block currentBlock;
+    int nbRotation = 0;
+
+
+
+
 
     /*
     Taille possible de grid (les plus communes) :
@@ -54,11 +64,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         this.nbRowGrid = nbRowGrid;
         this.nbColumnGrid = nbColumnGrid;
 
+
         Log.d("MyGLRenderer", String.valueOf(nbRowGrid));
         Log.d("MyGLRenderer", String.valueOf(nbColumnGrid));
     }
 
-    private final float squareSize = 1.0f;
 
     private Square[][] grid;
 /*
@@ -69,18 +79,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     // Les matrices habituelles Model/View/Projection
 
-    private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
 
     private float[] mSquarePosition = {0.0f, 0.0f};
 
 
-
-
     /* Première méthode équivalente à la fonction init en OpenGLSL */
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+
 
         // la couleur du fond d'écran
         GLES30.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -91,7 +99,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 unused) {
 
-        grid = new Square[nbColumnGrid+2][nbRowGrid+1];
+        grid = new Square[nbColumnGrid + 2][nbRowGrid + 1];
 
         // glClear rien de nouveau on vide le buffer de couleur et de profondeur */
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
@@ -99,11 +107,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         /* on utilise une classe Matrix (similaire à glm) pour définir nos matrices P, V et M*/
 
         /*Si on souhaite positionner une caméra mais ici on n'en a pas besoin*/
-       // Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        // Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
          /* Pour le moment on va utiliser une projection orthographique
            donc View = Identity
          */
-        Matrix.setIdentityM(mViewMatrix,0);
+        Matrix.setIdentityM(mViewMatrix, 0);
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -111,16 +119,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // ##### GRID DISPLAY #####
 
         float[] gridColor = { // BLUE
-                0.0f,  0.0f, 1.0f, 1.0f,
-                0.0f,  0.0f, 1.0f, 1.0f,
-                0.0f,  0.0f, 1.0f, 1.0f,
-                0.0f,  0.0f, 1.0f, 1.0f
+                0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f
         };
         float[] gridBorderColor = { // WHITE
-                1.0f,  1.0f, 1.0f, 1.0f,
-                1.0f,  1.0f, 1.0f, 1.0f,
-                1.0f,  1.0f, 1.0f, 1.0f,
-                1.0f,  1.0f, 1.0f, 1.0f
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f,
+                1.0f, 1.0f, 1.0f, 1.0f
         };
 
         float[] gridSquarePosTest = {
@@ -132,39 +140,47 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         float[] gridScratchTest = new float[16];
 
-        TBlock barre = new TBlock(gridSquarePosTest,Colors.red,squareSize);
-        barre.rotate();
-        //barre.rotate();
-        //barre.rotate();
-        //barre.rotate();
-        barre.display(mMVPMatrix);
 
-        float[] gridSquarePosTest2 = {
-                2.0f,
-                -8.0f // On inverse l'axe y
-        };
+        float[] gridSquarePos2;
+        try {
+            gridSquarePos2 = new float[]{
+                    this.currentBlock.getSquares()[0].get_position()[0],
+                    this.currentBlock.getSquares()[0].get_position()[1]
+            };
 
-        OBlock lBlock = new OBlock(gridSquarePosTest2,Colors.yellow,squareSize);
+        } catch (Exception e) {
+            gridSquarePos2 = new float[]{
+                    -2.0f,
+                    10.0f// On inverse l'axe y
+            };
+        }
 
-        lBlock.display(mMVPMatrix);
+        this.currentBlock = new ZBlock(gridSquarePos2, Colors.blue, squareSize);
 
-        Log.d(TAG, "center x axis : " + (grid.length-1));
-        for (int i = 0; i < grid.length; i++){
-            for (int j = 0; j < grid[0].length; j++){
+        for (int i =0; i<nbRotation%4;i++){
+            this.currentBlock.rotate();
+        }
+
+        this.currentBlock.display(mMVPMatrix);
+
+
+        Log.d(TAG, "center x axis : " + (grid.length - 1));
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
                 Log.d(TAG, "Grid : [" + i + "][" + j + "]");
                 float[] gridSquareMatrix = new float[16];
                 float[] gridSquarePos = {
-                        (2.0f*i)-((grid.length-1)*1.0f),
-                        -1.0f*(2.0f*j-((grid[0].length-1)*1.0f)) // On inverse l'axe y
+                        (2.0f * i) - ((grid.length - 1) * 1.0f),
+                        -1.0f * (2.0f * j - ((grid[0].length - 1) * 1.0f)) // On inverse l'axe y
                 };
 
                 // On met la bordure de la grille en blanc
-                if (i == 0 || i == grid.length-1 || j == grid[0].length -1){
+                if (i == 0 || i == grid.length - 1 || j == grid[0].length - 1) {
                     grid[i][j] = new Square(gridSquarePos, Colors.white, squareSize);
                     Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
                     float[] gridScratch = new float[16];
 
-                    Matrix.setIdentityM(gridSquareMatrix,0);
+                    Matrix.setIdentityM(gridSquareMatrix, 0);
 
                     Matrix.translateM(gridSquareMatrix, 0, gridSquarePos[0], gridSquarePos[1], 0);
 
@@ -181,7 +197,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                  */
 
 
-
             }
         }
 
@@ -194,12 +209,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         la projection qu'à la création de la surface !!
          */
         GLES30.glViewport(0, 0, width, height);
-        Matrix.orthoM(mProjectionMatrix, 0, -(width/100.0f), width/100.0f, -(height/100.0f), height/100.0f, -1.0f, 1.0f);
+        Matrix.orthoM(mProjectionMatrix, 0, -(width / 100.0f), width / 100.0f, -(height / 100.0f), height / 100.0f, -1.0f, 1.0f);
 
     }
 
     /* La gestion des shaders ... */
-    public static int loadShader(int type, String shaderCode){
+    public static int loadShader(int type, String shaderCode) {
 
         // create a vertex shader type (GLES30.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES30.GL_FRAGMENT_SHADER)
@@ -227,4 +242,62 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         return new float[]{};
     }
 
+    public void descendreBlock() {
+        Square[] square = new Square[4];
+        Square currentSquare;
+        float[] pos;
+        for (int i = 0; i < 4; i++) {
+            pos = new float[]{
+                    this.currentBlock.getSquares()[i].get_position()[0],
+                    this.currentBlock.getSquares()[i].get_position()[1] - 2 * squareSize
+            };
+            currentSquare = new Square(pos, Colors.green, squareSize);
+            square[i] = currentSquare;
+            //System.out.println(currentSquare.get_position()[1]);
+        }
+        this.currentBlock.setSquares(square);
+    }
+
+    public void deplacerBlockGauche() {
+        Square[] square = new Square[4];
+        Square currentSquare;
+        float[] pos;
+        for (int i = 0; i < 4; i++) {
+            pos = new float[]{
+                    this.currentBlock.getSquares()[i].get_position()[0]-2*squareSize,
+                    this.currentBlock.getSquares()[i].get_position()[1]
+            };
+            currentSquare = new Square(pos, Colors.green, squareSize);
+            square[i] = currentSquare;
+            //System.out.println(currentSquare.get_position()[1]);
+        }
+        this.currentBlock.setSquares(square);
+    }
+
+    public void deplacerBlockDroite() {
+        Square[] square = new Square[4];
+        Square currentSquare;
+        float[] pos;
+        for (int i = 0; i < 4; i++) {
+            pos = new float[]{
+                    this.currentBlock.getSquares()[i].get_position()[0] + 2*squareSize,
+                    this.currentBlock.getSquares()[i].get_position()[1]
+            };
+            currentSquare = new Square(pos, Colors.green, squareSize);
+            square[i] = currentSquare;
+            //System.out.println(currentSquare.get_position()[1]);
+        }
+        this.currentBlock.setSquares(square);
+    }
+
+    public void rotate() {
+        // On calcule la position du centre de la barre
+        this.nbRotation ++;
+    }
+
+
+
+    public Block getCurrentBlock() {
+        return currentBlock;
+    }
 }

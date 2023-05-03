@@ -5,7 +5,7 @@ import android.opengl.Matrix;
 import com.example.tp_opengl.Square;
 import com.example.tp_opengl.constants.Colors;
 
-public class JBlock {
+public class JBlock implements Block{
 
     float[] firstSquarePos;
     Square[] squares;
@@ -69,5 +69,11 @@ public class JBlock {
         }
     }
 
+    public Square[] getSquares() {
+        return squares;
+    }
 
+    public void setSquares(Square[] squares) {
+        this.squares = squares;
+    }
 }

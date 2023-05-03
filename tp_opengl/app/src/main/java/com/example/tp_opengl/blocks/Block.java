@@ -2,25 +2,13 @@ package com.example.tp_opengl.blocks;
 
 import com.example.tp_opengl.Square;
 
-public abstract class Block {
+public interface Block {
 
-    float[] firstSquarePos;
+    void display(float[] mMVPMatrix);
 
-    public Block(float[] firstSquarePos) {
-        this.firstSquarePos = firstSquarePos;
-    }
+    void rotate();
 
-    Square[] squares = {};
+    Square[] getSquares();
 
-    float[] squareColors = {};
-
-    public void display(){
-        for (Square square : squares) {
-            //square.draw();
-        }
-    };
-
-    public void rotate(){};
-
-    public void hide(){};
+    void setSquares(Square[] squares);
 }
