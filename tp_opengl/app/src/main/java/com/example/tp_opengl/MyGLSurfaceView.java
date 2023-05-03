@@ -39,15 +39,18 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     private final MyGLRenderer mRenderer;
 
+    /* pour gérer la translation */
+    private float mPreviousX;
+    private float mPreviousY;
+    private boolean mIsSwiping = false;
+
+
+    private static final int SWIPE_THRESHOLD = 100;
+
+    public static final String TAG = "MyGLSurfaceView";
+
     Timer timer = new Timer();
-    int doubleAppui = 0;
-    Timer timerDoubleClick = new Timer();
 
-    public MyGLSurfaceView(Context context, MyGLRenderer mRenderer, Timer timer) {
-        super(context);
-        this.mRenderer = mRenderer;
-
-    }
 
     public MyGLSurfaceView(Context context, int nbRowGrid, int nbColumnGrid) {
         super(context);
@@ -80,91 +83,42 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
     }
 
-    /* pour gérer la translation */
-    private float mPreviousX;
-    private float mPreviousY;
-    private boolean condition = false;
+
 
     /* Comment interpréter les événements sur l'écran tactile */
     @Override
     public boolean onTouchEvent(MotionEvent e) {
 
-        float x = e.getX();
-        float y = e.getY();
-
-        // la taille de l'écran en pixels
-        float screen_x = getWidth();
-        float screen_y = getHeight();
-
-        /*
-        Log.d(TAG + "message", "x"+Float.toString(x));
-        Log.d(TAG + "message", "y"+Float.toString(y));
-        Log.d(TAG + "message", "screen_x="+Float.toString(screen_x));
-        Log.d(TAG + "message", "screen_y="+Float.toString(screen_y));
-
-
-         */
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                /*
-                doubleAppui++;
-                if(doubleAppui>=2){
-
-                }
-                else{
-                    this.mRenderer.deplacerBlockGauche();
-                }
-
-                 */
-                //this.mRenderer.createBlock();
-                this.mRenderer.rotate();
-
-                // Vérifiez si le toucher se trouve dans la zone de votre bloc
-                /*
-                if (x >= bloc.x && x < bloc.x + bloc.width && y >= bloc.y && y < bloc.y + bloc.height) {
-                    // Le toucher est dans la zone de votre bloc, vous pouvez effectuer l'action souhaitée
-                    // ...
-                }
-
-                 */
-
-                //Log.d(TAG + " event", "DOWN");
-
-                // Faire la rotate ici
-
-
-
-
-
-                //requestRender();
-
-
-
-                break;
-
-            //case MotionEvent.ACTION
+                mPreviousX = e.getX();
+                mPreviousY = e.getY();
+                mIsSwiping = false;
+                return true;
 
             case MotionEvent.ACTION_MOVE:
-                // Effectuez l'action souhaitée lors du déplacement
-                // ...
+                if (!mIsSwiping) {
+                    float deltaX = e.getX() - mPreviousX;
+                    float deltaY = e.getY() - mPreviousY;
+                    if (Math.abs(deltaX) > SWIPE_THRESHOLD && Math.abs(deltaY) < SWIPE_THRESHOLD) {
+                        mIsSwiping = true;
+                        if (deltaX < 0) {
+                            Log.d(TAG + "event", "SWIPE LEFT");
 
-                //Log.d(TAG + " event", "MOVE");
+                        } else {
+                            Log.d(TAG + "event", "SWIPE RIGHT");
 
-                // Déplacer horizontalement le block ici
-                /*
-                System.out.println("x = " + x);
-                System.out.println("get = " + e.getX());
-                if(x + e.getX() < -200){
-                    this.mRenderer.deplacerBlockGauche();
-                    requestRender();
+                        }
+                    }
                 }
+                return true;
 
-                 */
-
-                break;
+            case MotionEvent.ACTION_UP:
+                if (!mIsSwiping) {
+                    Log.d(TAG + "event", "SINGLE TAP");
+                }
+                return true;
         }
-
         return true;
     }
-
 }
