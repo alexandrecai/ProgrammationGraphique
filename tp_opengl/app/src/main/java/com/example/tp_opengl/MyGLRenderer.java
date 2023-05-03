@@ -33,6 +33,10 @@ import com.example.tp_opengl.blocks.TBlock;
 import com.example.tp_opengl.blocks.ZBlock;
 import com.example.tp_opengl.constants.Colors;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /* MyGLRenderer implémente l'interface générique GLSurfaceView.Renderer */
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
@@ -46,6 +50,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private Block currentBlock;
     int nbRotation = 0;
+    List<Square> allSquares = new ArrayList<>();
 
 
 
@@ -147,15 +152,33 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     this.currentBlock.getSquares()[0].get_position()[0],
                     this.currentBlock.getSquares()[0].get_position()[1]
             };
+            this.currentBlock = new ZBlock(gridSquarePos2, Colors.blue, squareSize);
 
         } catch (Exception e) {
             gridSquarePos2 = new float[]{
-                    -2.0f,
-                    10.0f// On inverse l'axe y
+                    (2*squareSize * 4) - ((grid.length - 1) * 1.0f),
+                    -1.0f * (2*squareSize - ((grid[0].length - 1) * 1.0f))
             };
+            createBlock();
         }
 
-        this.currentBlock = new ZBlock(gridSquarePos2, Colors.blue, squareSize);
+        for(Square square: this.allSquares){
+
+            float[] gridSquareMatrix = new float[16];
+
+            float[] gridScratch = new float[16];
+
+            Matrix.setIdentityM(gridSquareMatrix, 0);
+
+            Matrix.translateM(gridSquareMatrix, 0, square.get_position()[0], square.get_position()[1], 0);
+
+            Matrix.multiplyMM(gridScratch, 0, mMVPMatrix, 0, gridSquareMatrix, 0);
+
+            square.draw(gridScratch);
+
+        }
+
+
 
         for (int i =0; i<nbRotation%4;i++){
             this.currentBlock.rotate();
@@ -167,17 +190,17 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Log.d(TAG, "center x axis : " + (grid.length - 1));
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                Log.d(TAG, "Grid : [" + i + "][" + j + "]");
+                //Log.d(TAG, "Grid : [" + i + "][" + j + "]");
                 float[] gridSquareMatrix = new float[16];
                 float[] gridSquarePos = {
-                        (2.0f * i) - ((grid.length - 1) * 1.0f),
-                        -1.0f * (2.0f * j - ((grid[0].length - 1) * 1.0f)) // On inverse l'axe y
+                        (2*squareSize * i) - ((grid.length - 1) * 1.0f),
+                        -1.0f * (2*squareSize * j - ((grid[0].length - 1) * 1.0f)) // On inverse l'axe y
                 };
 
                 // On met la bordure de la grille en blanc
                 if (i == 0 || i == grid.length - 1 || j == grid[0].length - 1) {
                     grid[i][j] = new Square(gridSquarePos, Colors.white, squareSize);
-                    Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
+                    //Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
                     float[] gridScratch = new float[16];
 
                     Matrix.setIdentityM(gridSquareMatrix, 0);
@@ -185,6 +208,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     Matrix.translateM(gridSquareMatrix, 0, gridSquarePos[0], gridSquarePos[1], 0);
 
                     Matrix.multiplyMM(gridScratch, 0, mMVPMatrix, 0, gridSquareMatrix, 0);
+
+                    //allSquares.add(grid[i][j]);
 
                     grid[i][j].draw(gridScratch);
                 }
@@ -290,9 +315,34 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         this.currentBlock.setSquares(square);
     }
 
+
+    public boolean isAtTheBottom(){
+        Square bottom = grid[0][grid[0].length-1];
+        float lowestSquareY = this.currentBlock.getSquares()[0].get_position()[1];
+        for (int i = 1; i < 4; i++) {
+            if (lowestSquareY> this.currentBlock.getSquares()[i].get_position()[1]){
+                lowestSquareY = this.currentBlock.getSquares()[i].get_position()[1];
+            }
+        }
+        if(lowestSquareY<=bottom.get_position()[1]+2*squareSize){
+            allSquares.addAll(Arrays.asList(this.currentBlock.getSquares()));
+            return true;
+        }
+        return false;
+    }
+
     public void rotate() {
         // On calcule la position du centre de la barre
         this.nbRotation ++;
+    }
+
+    public void createBlock(){
+        float[] initPos = new float[]{
+                (2*squareSize * 4) - ((grid.length - 1) * 1.0f),
+                -1.0f * (2*squareSize - ((grid[0].length - 1) * 1.0f))
+        };
+        this.currentBlock = new ZBlock(initPos,Colors.red,squareSize);
+        this.nbRotation = 0;
     }
 
 

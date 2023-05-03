@@ -68,10 +68,15 @@ public class MyGLSurfaceView extends GLSurfaceView {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                mRenderer.descendreBlock();
+                if(!mRenderer.isAtTheBottom()){
+                    mRenderer.descendreBlock();
+                }
+                else{
+                    mRenderer.createBlock();
+                }
                 requestRender();
             }
-        }, 1000, 1000);
+        }, 2000, 1000);
     }
 
     /* pour gérer la translation */
@@ -117,7 +122,7 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
 
                 this.mRenderer.rotate();
-                requestRender();
+                //requestRender();
 
 
 
@@ -132,12 +137,15 @@ public class MyGLSurfaceView extends GLSurfaceView {
                 //Log.d(TAG + " event", "MOVE");
 
                 // Déplacer horizontalement le block ici
+                /*
                 System.out.println("x = " + x);
                 System.out.println("get = " + e.getX());
                 if(x + e.getX() < -200){
                     this.mRenderer.deplacerBlockGauche();
                     requestRender();
                 }
+
+                 */
 
                 break;
         }

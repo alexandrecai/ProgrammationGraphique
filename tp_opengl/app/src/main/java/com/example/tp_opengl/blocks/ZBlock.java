@@ -20,7 +20,7 @@ public class ZBlock implements Block{
         pos[0] = pos[0]-2*size;
         pos[1] = firstSquarePos[1]+2*size;
         this.squares[2] = new Square(pos,squareColors,size);
-        pos[0] = pos[0]-2.0f;
+        pos[0] = pos[0]-2*size;
         this.squares[3] = new Square(pos,squareColors,size);
         this.firstSquarePos = firstSquarePos;
         this.squareColors = squareColors;
