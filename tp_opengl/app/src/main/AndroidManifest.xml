@@ -18,6 +18,7 @@
         tools:targetApi="31">
         <activity
             android:name=".EndgameActivity"
+            android:theme="@style/Theme.Tp_opengl.NoActionBar"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -25,6 +26,7 @@
         </activity>
         <activity
             android:name=".MenuActivity"
+            android:theme="@style/Theme.Tp_opengl.NoActionBar"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
