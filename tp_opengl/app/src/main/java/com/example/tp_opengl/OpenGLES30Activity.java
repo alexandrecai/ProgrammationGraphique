@@ -3,6 +3,7 @@ package com.example.tp_opengl;
 
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import android.app.Activity;
@@ -23,9 +24,15 @@ public class OpenGLES30Activity extends Activity {
 
     public static final String TAG = "OpenGLES30Activity";
 
+    public MediaPlayer mediaPlayer;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.tetris_theme);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         /* Création de View et association à Activity
            MyGLSurfaceView : classe à implémenter et en particulier la partie renderer */
@@ -49,5 +56,12 @@ public class OpenGLES30Activity extends Activity {
         mGLView = new MyGLSurfaceView(this, nbRowGrid, nbColumnGrid);
         /* Définition de View pour cette activité */
         setContentView(mGLView);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mediaPlayer.release();
+        mediaPlayer = null;
     }
 }
