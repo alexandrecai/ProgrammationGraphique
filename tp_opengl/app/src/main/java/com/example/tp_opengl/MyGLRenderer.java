@@ -66,7 +66,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     Taille possible de grid (les plus communes) :
     7x15
     8x16
-    10x20
 
      */
 
@@ -196,13 +195,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 
 
-
-
-
-        //this.currentBlock = new TBlock(gridSquarePos2,this.currentColor,squareSize);
-
-
-
         for(Square square: this.allSquares){
 
             float[] gridSquareMatrix = new float[16];
@@ -231,7 +223,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Log.d(TAG, "center x axis : " + (grid.length - 1));
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                //Log.d(TAG, "Grid : [" + i + "][" + j + "]");
                 float[] gridSquareMatrix = new float[16];
                 float[] gridSquarePos = {
                         (2*squareSize * i) - ((grid.length - 1) * 1.0f),
@@ -247,7 +238,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                         grid[i][j] = new Square(gridSquarePos, Colors.white, squareSize);
                     }
 
-                    //Log.d(TAG, "Grid Border : [" + i + "][" + j + "]");
                     float[] gridScratch = new float[16];
 
                     Matrix.setIdentityM(gridSquareMatrix, 0);
@@ -256,17 +246,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
                     Matrix.multiplyMM(gridScratch, 0, mMVPMatrix, 0, gridSquareMatrix, 0);
 
-                    //allSquares.add(grid[i][j]);
 
                     grid[i][j].draw(gridScratch);
                 }
-                /*
-                else {
-                    grid[i][j] = new Square(gridSquarePos, Colors.cyan);
-                }
 
-
-                 */
 
 
             }
@@ -300,20 +283,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
 
-    /* Les méthodes nécessaires à la manipulation de la position finale du carré */
-    public void setPosition(float x, float y) {
-        /*mSquarePosition[0] += x;
-        mSquarePosition[1] += y;
-        mSquarePosition[0] = x;
-        mSquarePosition[1] = y;
-*/
-    }
-
-    public float[] getPosition() {
-        //return mSquarePosition;
-        return new float[]{};
-    }
-
     public void descendreBlock() {
         Square[] square = new Square[4];
         Square currentSquare;
@@ -325,7 +294,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             };
             currentSquare = new Square(pos, Colors.green, squareSize);
             square[i] = currentSquare;
-            //System.out.println(currentSquare.get_position()[1]);
         }
         this.currentBlock.setSquares(square);
     }
@@ -341,7 +309,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             };
             currentSquare = new Square(pos, Colors.green, squareSize);
             square[i] = currentSquare;
-            //System.out.println(currentSquare.get_position()[1]);
         }
         this.currentBlock.setSquares(square);
     }
@@ -357,7 +324,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             };
             currentSquare = new Square(pos, Colors.green, squareSize);
             square[i] = currentSquare;
-            //System.out.println(currentSquare.get_position()[1]);
         }
         this.currentBlock.setSquares(square);
     }
@@ -402,28 +368,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         return false;
     }
 
-    public void createBlock(){
-
-
-
-        float[] initPos = new float[]{
-                (2*squareSize * 4) - ((grid.length - 1) * 1.0f),
-                -1.0f * (2*squareSize - ((grid[0].length - 1) * 1.0f))
-        };
-
-
-        this.randBlock = random.nextInt(7);
-        //System.out.println("Rand = " + this.randBlock);
-
-
-        this.nbRotation = 0;
-    }
-
-
-
-    public Block getCurrentBlock() {
-        return currentBlock;
-    }
 
     public void setGrid() {
         grid = new Square[nbColumnGrid + 2][nbRowGrid + 1];
@@ -448,35 +392,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void deleteLines(){
-        /*
-        float currentY = -1.0f * (2*squareSize * 10 - ((grid[0].length - 1) * 1.0f));
-        System.out.println("inDeleteLines");
-        List<Square> toDelete = new ArrayList<>();
-        for (Square squareToDelete:this.allSquares){
-            if(squareToDelete.get_position()[1] == currentY){
-                toDelete.add(squareToDelete);
-            }
-        }
-        List<Square> toAdd = new ArrayList<>();
-        for (Square squareToMove:this.allSquares){
-            if(squareToMove.get_position()[1] > currentY ){
-                Square newSquare = squareToMove;
-                toDelete.add(squareToMove);
-                //this.allSquares.remove(squareToMove);
-                float[] newPos = new float[]{
-                        newSquare.get_position()[0],
-                        newSquare.get_position()[1]-2*squareSize
-                };
-                newSquare.set_position(newPos);
-                toAdd.add(newSquare);
 
-            }
-        }
-        this.allSquares.addAll(toAdd);
-        allSquares.removeAll(toDelete);
-
-
-         */
 
         for (int i = 0; i<nbRowGrid;i++){
             int nbSquareInLine = 0;
@@ -498,7 +414,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     if(squareToMove.get_position()[1] > currentY ){
                         Square newSquare = squareToMove;
                         toDelete.add(squareToMove);
-                        //this.allSquares.remove(squareToMove);
                         float[] newPos = new float[]{
                                 newSquare.get_position()[0],
                                 newSquare.get_position()[1]-2*squareSize
