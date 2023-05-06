@@ -3,11 +3,14 @@
 #include <IL/il.h>
 
 int main() {
+
     unsigned int image;
+
     ilInit();
+
     ilGenImages(1, &image);
     ilBindImage(image);
-    ilLoadImage("in.jpg");
+    ilLoadImage("../images/flower.jpg");
 
     int width, height, bpp, format;
 
@@ -19,69 +22,51 @@ int main() {
     // Récupération des données de l'image
     unsigned char* data = ilGetData();
 
-    // Création du tableau de sortie
-    unsigned char* out = new unsigned char[width * height * bpp];
+    // Traitement de l'image
+    unsigned char* out_grey = new unsigned char[width*height];
+    unsigned char* out_boxblur = new unsigned char[width*height];
 
-    // Paramètres du filtre
-    int radius = 4;
-    int kernelSize = 2 * radius + 1;
-    float kernelSum = kernelSize * kernelSize;
 
-    // Parcours de l'image
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
+    // Conversion de l'image en niveaux de gris
+    for (std::size_t i = 0; i < width*height; ++i) {
+        // GREY = ( 307 * R + 604 * G + 113 * B ) / 1024
+        out_grey[i] = (307 * data[3 * i] + 604 * data[3 * i + 1] + 113 * data[3 * i + 2]) >> 10;
+    }
 
-            // Initialisation des variables pour la somme des pixels dans le noyau
-            float r_sum = 0.0f;
-            float g_sum = 0.0f;
-            float b_sum = 0.0f;
+    unsigned int i, j, c;
 
-            // Parcours du noyau centré sur le pixel courant
-            for (int j = -radius; j <= radius; ++j) {
-                for (int i = -radius; i <= radius; ++i) {
+    int total, res;
 
-                    // Calcul des coordonnées du pixel à ajouter à la somme
-                    int xx = x + i;
-                    int yy = y + j;
 
-                    // Gestion des bords de l'image
-                    xx = std::max(0, std::min(xx, width - 1));
-                    yy = std::max(0, std::min(yy, height - 1));
+    for(j = 1 ; j < height - 1 ; ++j) {
 
-                    // Récupération de la couleur du pixel à ajouter à la somme
-                    int idx = (yy * width + xx) * bpp;
-                    float r = data[idx];
-                    float g = data[idx + 1];
-                    float b = data[idx + 2];
+        for(i = 1 ; i < width - 1 ; ++i) {
 
-                    // Ajout du pixel à la somme
-                    r_sum += r;
-                    g_sum += g;
-                    b_sum += b;
-                }
-            }
+            // Horizontal
+            total =       out_grey[((j - 1) * width + i - 1) ] + out_grey[((j - 1) * width + i) ]  +  out_grey[((j - 1) * width + i + 1) ]
+                    +  out_grey[( j      * width + i - 1) ] + out_grey[( j * width + i) ] + out_grey[( j * width + i - +1 ) ]
+                    +     out_grey[((j + 1) * width + i - 1) ] +  out_grey[( (j + 1) * width + i) ]  + out_grey[((j + 1) * width + i + 1) ];
 
-            // Calcul de la couleur moyenne dans le noyau
-            unsigned char r = static_cast<unsigned char>(r_sum / kernelSum);
-            unsigned char g = static_cast<unsigned char>(g_sum / kernelSum);
-            unsigned char b = static_cast<unsigned char>(b_sum / kernelSum);
 
-            // Stockage de la couleur moyenne dans le tableau de sortie
-            int idx = (y * width + x) * bpp;
-            out[idx] = r;
-            out[idx + 1] = g;
-            out[idx + 2] = b;
+            res = total/9;
+
+            //out_boxblur[ j * width + i ] = sqrt(res);
+
+            out_boxblur[(height - j - 1) * width + i] = res;
+
         }
+
     }
 
     // Placement des données dans l'image
-    ilTexImage(width, height, 1, bpp, format, IL_UNSIGNED_BYTE, out);
+    ilTexImage(width, height, 2, 1, IL_LUMINANCE, IL_UNSIGNED_BYTE, out_boxblur);
 
     // Sauvegarde de l'image
     ilEnable(IL_FILE_OVERWRITE);
     ilSaveImage("out.jpg");
 
     ilDeleteImages(1, &image);
-    delete[] out;
-    return 0;
+
+    delete[] out_grey;
+    delete[] out_boxblur;
 }
