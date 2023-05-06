@@ -9,7 +9,7 @@ int main() {
     ilInit();
     ilGenImages(1, &image);
     ilBindImage(image);
-    ilLoadImage("in.jpg");
+    ilLoadImage("../in.jpg");
 
     int width, height, bpp, format;
 

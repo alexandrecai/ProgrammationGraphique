@@ -3,12 +3,12 @@ CXXFLAGS=-O3 -march=native
 LDLIBS1=`pkg-config --libs opencv`
 LDLIBS2=-lm -lIL
 
-all: sobel sobel-cu
+all: boxblur boxblur-cu
 
-sobel: boxblur.cpp
+boxblur: boxblur.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDLIBS2)
 
-sobel-cu: boxblur.cu
+boxblur-cu: boxblur.cu
 	nvcc -o $@ $<  $(LDLIBS1)
 
 .PHONY: clean
