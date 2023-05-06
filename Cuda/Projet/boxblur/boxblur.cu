@@ -20,25 +20,22 @@ __global__ void grayscale( unsigned char * rgb, unsigned char * g, std::size_t c
 /**
  * Kernel pour obtenir les contours à partir de l'image en niveaux de gris.
  */
-__global__ void sobel( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
+__global__ void boxblur( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
 {
   auto i = blockIdx.x * blockDim.x + threadIdx.x;
   auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
   if( i > 1 && i < cols && j > 1 && j < rows )
   {
-    auto h =     g[ (j-1)*cols + i - 1 ] -     g[ (j-1)*cols + i + 1 ]
-           + 2 * g[ (j  )*cols + i - 1 ] - 2 * g[ (j  )*cols + i + 1 ]
-           +     g[ (j+1)*cols + i - 1 ] -     g[ (j+1)*cols + i + 1 ];
+      total =       out_grey[((j - 1) * cols + i - 1) ] + out_grey[((j - 1) * cols + i) ]  +  out_grey[((j - 1) * cols + i + 1) ]
+                    +  out_grey[( j      * cols + i - 1) ] + out_grey[( j * cols + i) ] + out_grey[( j * cols + i - +1 ) ]
+                    +     out_grey[((j + 1) * cols + i - 1) ] +  out_grey[( (j + 1) * cols + i) ]  + out_grey[((j + 1) * cols + i + 1) ];
 
-    auto v =     g[ (j-1)*cols + i - 1 ] -     g[ (j+1)*cols + i - 1 ]
-           + 2 * g[ (j-1)*cols + i     ] - 2 * g[ (j+1)*cols + i     ]
-           +     g[ (j-1)*cols + i + 1 ] -     g[ (j+1)*cols + i + 1 ];
 
-    auto res = h*h + v*v;
-    res = res > 65535 ? res = 65535 : res;
+      auto res = total/9;
 
-    s[ j * cols + i ] = sqrtf( res );
+      s[(rows - j - 1) * cols + i] = res;
+
   }
 }
 
@@ -47,7 +44,7 @@ __global__ void sobel( unsigned char * g, unsigned char * s, std::size_t cols, s
  * Kernel pour obtenir les contours à partir de l'image en niveaux de gris, en utilisant la mémoire shared
  * pour limiter les accès à la mémoire globale.
  */
-__global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
+__global__ void boxblur_shared( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
 {
   auto li = threadIdx.x;
   auto lj = threadIdx.y;
@@ -69,6 +66,7 @@ __global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t 
 
   if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
   {
+      /*
     auto h =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
            + 2 * sh[ (lj  )*w + li - 1 ] - 2 * sh[ (lj  )*w + li + 1 ]
            +     sh[ (lj+1)*w + li - 1 ] -     sh[ (lj+1)*w + li + 1 ];
@@ -77,10 +75,21 @@ __global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t 
            + 2 * sh[ (lj-1)*w + li     ] - 2 * sh[ (lj+1)*w + li     ]
            +     sh[ (lj-1)*w + li + 1 ] -     sh[ (lj+1)*w + li + 1 ];
 
+       */
+
+    total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
+                    +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li - +1 ) ]
+                    +     sh[((lj + 1) * w + li - 1) ] +  sh[( (lj + 1) * w + li) ]  + sh[((lj + 1) * w + li + 1) ];
+
+
+    auto res = total/9;
+    s[(rows - j - 1) * cols + i] = res;
+    /*
     auto res = h*h + v*v;
     res = res > 65535 ? res = 65535 : res;
 
     s[ j * cols + i ] = sqrtf( res );
+     */
   }
 }
 
@@ -88,7 +97,7 @@ __global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t 
 /**
  * Kernel fusionnant le passage en niveaux de gris et la détection de contours.
  */
-__global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
+__global__ void grayscale_boxblur_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
   auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
   auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
 
@@ -116,6 +125,7 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
  
   if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
   {
+      /*
     auto hr =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
            + 2 * sh[ (lj  )*w + li - 1 ] - 2 * sh[ (lj  )*w + li + 1 ]
            +     sh[ (lj+1)*w + li - 1 ] -     sh[ (lj+1)*w + li + 1 ];
@@ -128,6 +138,17 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
     res = res > 65535 ? res = 65535 : res;
 
     s[ j * cols + i ] = sqrtf( res );
+       */
+
+      total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
+                    +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li - +1 ) ]
+                    +     sh[((lj + 1) * w + li - 1) ] +  sh[( (lj + 1) * w + li) ]  + sh[((lj + 1) * w + li + 1) ];
+
+
+      auto res = total/9;
+      s[(rows - j - 1) * cols + i] = res;
+
+
   }
 }
 
@@ -184,17 +205,17 @@ int main()
   /*
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  sobel<<< grid0, block >>>( g_d, s_d, cols, rows );
+  boxblur<<< grid0, block >>>( g_d, s_d, cols, rows );
   */
 
   /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  sobel_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
+  boxblur_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
   */
 
   // Version fusionnée.
-  grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  grayscale_boxblur_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
