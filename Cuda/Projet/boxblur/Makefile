@@ -14,4 +14,4 @@ boxblur-cu: boxblur.cu
 .PHONY: clean
 
 clean:
-	rm sobel sobel-cu
+	rm boxblur boxblur-cu
