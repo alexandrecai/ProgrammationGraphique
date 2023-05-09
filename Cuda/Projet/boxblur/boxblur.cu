@@ -28,7 +28,7 @@ __global__ void boxblur( unsigned char * g, unsigned char * s, std::size_t cols,
   if( i > 1 && i < cols && j > 1 && j < rows )
   {
       auto total =       g[((j - 1) * cols + i - 1) ] + g[((j - 1) * cols + i) ]  +  g[((j - 1) * cols + i + 1) ]
-                    +  g[( j      * cols + i - 1) ] + g[( j * cols + i) ] + g[( j * cols + i - +1 ) ]
+                    +  g[( j      * cols + i - 1) ] + g[( j * cols + i) ] + g[( j * cols + i +1 ) ]
                     +     g[((j + 1) * cols + i - 1) ] +  g[( (j + 1) * cols + i) ]  + g[((j + 1) * cols + i + 1) ];
 
 

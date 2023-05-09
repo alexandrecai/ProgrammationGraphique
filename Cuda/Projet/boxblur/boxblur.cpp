@@ -44,7 +44,7 @@ int main() {
 
             // Horizontal
             total =       out_grey[((j - 1) * width + i - 1) ] + out_grey[((j - 1) * width + i) ]  +  out_grey[((j - 1) * width + i + 1) ]
-                    +  out_grey[( j      * width + i - 1) ] + out_grey[( j * width + i) ] + out_grey[( j * width + i - +1 ) ]
+                    +  out_grey[( j      * width + i - 1) ] + out_grey[( j * width + i) ] + out_grey[( j * width + i +1 ) ]
                     +     out_grey[((j + 1) * width + i - 1) ] +  out_grey[( (j + 1) * width + i) ]  + out_grey[((j + 1) * width + i + 1) ];
 
 
