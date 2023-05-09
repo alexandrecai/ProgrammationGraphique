@@ -120,7 +120,7 @@ __global__ void edge_detection_shared( unsigned char * g, unsigned char * s, std
 /**
  * Kernel fusionnant le passage en niveaux de gris et la détection de contours.
  */
-__global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
+__global__ void grayscale_edge_detection_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
   auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
   auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
 
@@ -241,7 +241,7 @@ int main()
   */
 
   // Version fusionnée.
-  grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  grayscale_edge_detection_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
