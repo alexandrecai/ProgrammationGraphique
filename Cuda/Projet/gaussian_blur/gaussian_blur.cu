@@ -20,25 +20,27 @@ __global__ void grayscale( unsigned char * rgb, unsigned char * g, std::size_t c
 /**
  * Kernel pour obtenir les contours à partir de l'image en niveaux de gris.
  */
-__global__ void sobel( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
+__global__ void gaussian( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
 {
   auto i = blockIdx.x * blockDim.x + threadIdx.x;
   auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-  if( i > 1 && i < cols && j > 1 && j < rows )
+  if( i > 3 && i < cols && j > 3 && j < rows )
   {
-    auto h =     g[ (j-1)*cols + i - 1 ] -     g[ (j-1)*cols + i + 1 ]
-           + 2 * g[ (j  )*cols + i - 1 ] - 2 * g[ (j  )*cols + i + 1 ]
-           +     g[ (j+1)*cols + i - 1 ] -     g[ (j+1)*cols + i + 1 ];
+    auto total =   
+                      0 * g[((j - 3) * cols + i - 3) ]  +  0 * g[((j - 3) * cols + i - 2) ] +   0 * g[((j - 3) * cols + i - 1) ] +   5 * g[((j - 3) * cols + i) ] +   0 * g[((j - 3) * cols + i + 1) ]  +  0 * g[((j - 3) * cols + i + 2) ] + 0 * g[((j - 3) * cols + i + 3) ]
+                    + 0 * g[((j - 2) * cols + i - 3) ]  +  5 * g[((j - 2) * cols + i - 2) ] +  18 * g[((j - 2) * cols + i - 1) ] +  32 * g[((j - 2) * cols + i) ] +  18 * g[((j - 2) * cols + i + 1) ]  +  5 * g[((j - 2) * cols + i + 2) ] + 0 * g[((j - 2) * cols + i + 3) ]
+                    + 0 * g[((j - 1) * cols + i - 3) ]  + 18 * g[((j - 1) * cols + i - 2) ] +  64 * g[((j - 1) * cols + i - 1) ] + 100 * g[((j - 1) * cols + i) ] +  64 * g[((j - 1) * cols + i + 1) ]  + 18 * g[((j - 1) * cols + i + 2) ] + 0 * g[((j - 1) * cols + i + 3) ]
+                    + 5 * g[((j) * cols + i - 3) ]      + 32 * g[((j) * cols + i - 2) ]     + 100 * g[((j) * cols + i - 1) ]     + 100 * g[((j) * cols + i) ]     + 100 * g[((j) * cols + i + 1) ]      + 32 * g[((j) * cols+ i + 2) ]     + 5 * g[((j) * cols + i + 3) ]
+                    + 0 * g[((j + 1) * cols + i - 3) ]  + 18 * g[((j + 1) * cols + i - 2) ] +  64 * g[((j + 1) * cols + i - 1) ] + 100 * g[((j + 1) * cols + i) ] +  64 * g[((j + 1) * cols + i + 1) ]  + 18 * g[((j + 1) * cols + i + 2) ] + 0 * g[((j + 1) * cols + i + 3) ]
+                    + 0 * g[((j + 2) * cols + i - 3) ]  +  5 * g[((j + 2) * cols + i - 2) ] +  18 * g[((j + 2) * cols + i - 1) ] +  32 * g[((j + 2) * cols + i) ] +  18 * g[((j + 2) * cols + i + 1) ]  +  5 * g[((j + 2) * cols + i + 2) ] + 0 * g[((j + 2) * cols + i + 3) ]
+                    + 0 * g[((j + 3) * cols + i - 3) ]  +  0 * g[((j + 3) * cols + i - 2) ] +   0 * g[((j + 3) * cols + i - 1) ] +   5 * g[((j + 3) * cols + i) ] +   0 * g[((j + 3) * cols + i + 1) ]  +  0 * g[((j + 3) * cols + i + 2) ] + 0 * g[((j + 3) * cols + i + 3) ]
+                    ;
 
-    auto v =     g[ (j-1)*cols + i - 1 ] -     g[ (j+1)*cols + i - 1 ]
-           + 2 * g[ (j-1)*cols + i     ] - 2 * g[ (j+1)*cols + i     ]
-           +     g[ (j-1)*cols + i + 1 ] -     g[ (j+1)*cols + i + 1 ];
 
-    auto res = h*h + v*v;
-    res = res > 65535 ? res = 65535 : res;
+    auto res = total/1068;
 
-    s[ j * cols + i ] = sqrtf( res );
+    s[(rows - j - 1) * cols + i] = res;
   }
 }
 
@@ -134,7 +136,7 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
 
 int main()
 {
-  cv::Mat m_in = cv::imread("in.jpg", cv::IMREAD_UNCHANGED );
+  cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED );
 
   //auto rgb = m_in.data;
   auto rows = m_in.rows;
@@ -181,11 +183,11 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-  /*
+  
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  sobel<<< grid0, block >>>( g_d, s_d, cols, rows );
-  */
+  gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
+  
 
   /*
   // Version en 2 étapes, Sobel avec mémoire shared.
@@ -194,7 +196,7 @@ int main()
   */
 
   // Version fusionnée.
-  grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
