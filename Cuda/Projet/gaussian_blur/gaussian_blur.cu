@@ -40,7 +40,7 @@ __global__ void gaussian( unsigned char * g, unsigned char * s, std::size_t cols
 
     auto res = total/1068;
 
-    s[(rows - j - 1) * cols + i] = res;
+    s[j * cols + i] = res;
   }
 }
 
