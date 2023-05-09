@@ -26,7 +26,7 @@ __global__ void edge_detection( unsigned char * g, unsigned char * s, std::size_
   auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
   if( i > 1 && i < cols && j > 1 && j < rows )
-  {*
+  {
   /*
     auto h =     g[ (j-1)*cols + i - 1 ] -     g[ (j-1)*cols + i + 1 ]
            + 2 * g[ (j  )*cols + i - 1 ] - 2 * g[ (j  )*cols + i + 1 ]
