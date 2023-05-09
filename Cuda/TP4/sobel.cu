@@ -181,11 +181,11 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-  /*
+  
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   sobel<<< grid0, block >>>( g_d, s_d, cols, rows );
-  */
+  
 
   /*
   // Version en 2 étapes, Sobel avec mémoire shared.
@@ -194,7 +194,7 @@ int main()
   */
 
   // Version fusionnée.
-  grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
