@@ -34,7 +34,7 @@ __global__ void boxblur( unsigned char * g, unsigned char * s, std::size_t cols,
 
       auto res = total/9;
 
-      s[(rows - j - 1) * cols + i] = res;
+      s[j * cols + i] = res;
 
   }
 }
