@@ -34,8 +34,8 @@ __global__ void boxblur( unsigned char * g, unsigned char * s, std::size_t cols,
 
       auto res = total/9;
 
-      //s[(rows - j - 1) * cols + i] = res;
-      s[ j * cols + i ] = res;
+      s[(rows - j - 1) * cols + i] = res;
+
   }
 }
 
@@ -155,7 +155,7 @@ __global__ void grayscale_boxblur_shared( unsigned char * rgb, unsigned char * s
 
 int main()
 {
-  cv::Mat m_in = cv::imread("in.jpg", cv::IMREAD_UNCHANGED );
+  cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED );
 
   //auto rgb = m_in.data;
   auto rows = m_in.rows;
