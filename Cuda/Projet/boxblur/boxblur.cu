@@ -27,9 +27,9 @@ __global__ void boxblur( unsigned char * g, unsigned char * s, std::size_t cols,
 
   if( i > 1 && i < cols && j > 1 && j < rows )
   {
-      total =       out_grey[((j - 1) * cols + i - 1) ] + out_grey[((j - 1) * cols + i) ]  +  out_grey[((j - 1) * cols + i + 1) ]
-                    +  out_grey[( j      * cols + i - 1) ] + out_grey[( j * cols + i) ] + out_grey[( j * cols + i - +1 ) ]
-                    +     out_grey[((j + 1) * cols + i - 1) ] +  out_grey[( (j + 1) * cols + i) ]  + out_grey[((j + 1) * cols + i + 1) ];
+      auto total =       s[((j - 1) * cols + i - 1) ] + s[((j - 1) * cols + i) ]  +  s[((j - 1) * cols + i + 1) ]
+                    +  s[( j      * cols + i - 1) ] + s[( j * cols + i) ] + s[( j * cols + i - +1 ) ]
+                    +     s[((j + 1) * cols + i - 1) ] +  s[( (j + 1) * cols + i) ]  + s[((j + 1) * cols + i + 1) ];
 
 
       auto res = total/9;
@@ -77,7 +77,7 @@ __global__ void boxblur_shared( unsigned char * g, unsigned char * s, std::size_
 
        */
 
-    total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
+    auto total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
                     +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li - +1 ) ]
                     +     sh[((lj + 1) * w + li - 1) ] +  sh[( (lj + 1) * w + li) ]  + sh[((lj + 1) * w + li + 1) ];
 
@@ -140,7 +140,7 @@ __global__ void grayscale_boxblur_shared( unsigned char * rgb, unsigned char * s
     s[ j * cols + i ] = sqrtf( res );
        */
 
-      total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
+      auto total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
                     +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li - +1 ) ]
                     +     sh[((lj + 1) * w + li - 1) ] +  sh[( (lj + 1) * w + li) ]  + sh[((lj + 1) * w + li + 1) ];
 

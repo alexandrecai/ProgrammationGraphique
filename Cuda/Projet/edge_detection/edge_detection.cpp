@@ -45,7 +45,6 @@ int main() {
             int contour = -1;
             int middle = 8;
 
-            // Horizontal
             res =       out_grey[((j - 1) * width + i - 1) ] * contour + out_grey[((j - 1) * width + i) ] * contour +  out_grey[((j - 1) * width + i + 1) ]* contour
                     +  out_grey[( j      * width + i - 1) ]* contour + out_grey[( j * width + i) ]* middle + out_grey[( j * width + i - +1 ) ]* contour
                     +     out_grey[((j + 1) * width + i - 1) ]* contour +  out_grey[( (j + 1) * width + i) ] * contour + out_grey[((j + 1) * width + i + 1) ]* contour;
