@@ -151,7 +151,7 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
 
 int main()
 {
-  cv::Mat m_in = cv::imread("in.jpg", cv::IMREAD_UNCHANGED );
+  cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED );
 
   //auto rgb = m_in.data;
   auto rows = m_in.rows;
