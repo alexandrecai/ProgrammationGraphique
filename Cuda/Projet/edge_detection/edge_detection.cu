@@ -166,7 +166,7 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
 
 int main()
 {
-  cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED );
+  cv::Mat m_in = cv::imread("../images/flower.jpg", cv::IMREAD_UNCHANGED );
 
   //auto rgb = m_in.data;
   auto rows = m_in.rows;
@@ -213,17 +213,17 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-  /*
+
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   edge_detection<<< grid0, block >>>( g_d, s_d, cols, rows );
-  */
 
 
+  /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   edge_detection_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-
+  */
 
   // Version fusionnée.
   //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
