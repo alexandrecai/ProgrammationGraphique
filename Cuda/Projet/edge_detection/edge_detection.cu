@@ -148,6 +148,7 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
  
   if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
   {
+      /*
     auto hr =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
            + 2 * sh[ (lj  )*w + li - 1 ] - 2 * sh[ (lj  )*w + li + 1 ]
            +     sh[ (lj+1)*w + li - 1 ] -     sh[ (lj+1)*w + li + 1 ];
@@ -160,6 +161,20 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
     res = res > 65535 ? res = 65535 : res;
 
     s[ j * cols + i ] = sqrtf( res );
+    */
+
+      auto contour = -1;
+      auto middle = 8;
+
+      auto res =       sh[((lj - 1) * w + li - 1) ] * contour + sh[((lj - 1) * w + li) ] * contour +  sh[((lj - 1) * w + li + 1) ]* contour
+                       +  sh[( lj * w + li - 1) ]* contour + sh[( lj * w + li) ]* middle + sh[( lj * w + li  +1 ) ]* contour
+                       +     sh[((lj + 1) * w + li - 1) ]* contour +  sh[( (lj + 1) * w + li) ] * contour + sh[((lj + 1) * w + li + 1) ]* contour;
+
+      //out_boxblur[ j * width + i ] = sqrt(res);
+      res = res > 255 ? 255 : res;
+      res = res < 0 ? 0 : res;
+
+      s[j * cols + i] = res;
   }
 }
 
@@ -219,14 +234,14 @@ int main()
   edge_detection<<< grid0, block >>>( g_d, s_d, cols, rows );
   */
 
-
+  /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   edge_detection_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-  
+  */
 
   // Version fusionnée.
-  //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
