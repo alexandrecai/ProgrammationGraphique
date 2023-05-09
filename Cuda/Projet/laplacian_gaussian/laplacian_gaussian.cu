@@ -20,13 +20,14 @@ __global__ void grayscale( unsigned char * rgb, unsigned char * g, std::size_t c
 /**
  * Kernel pour obtenir les contours à partir de l'image en niveaux de gris.
  */
-__global__ void sobel( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
+__global__ void laplacian_gaussian( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
 {
   auto i = blockIdx.x * blockDim.x + threadIdx.x;
   auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
   if( i > 1 && i < cols && j > 1 && j < rows )
   {
+      /*
     auto h =     g[ (j-1)*cols + i - 1 ] -     g[ (j-1)*cols + i + 1 ]
            + 2 * g[ (j  )*cols + i - 1 ] - 2 * g[ (j  )*cols + i + 1 ]
            +     g[ (j+1)*cols + i - 1 ] -     g[ (j+1)*cols + i + 1 ];
@@ -39,6 +40,19 @@ __global__ void sobel( unsigned char * g, unsigned char * s, std::size_t cols, s
     res = res > 65535 ? res = 65535 : res;
 
     s[ j * cols + i ] = sqrtf( res );
+    */
+
+
+      auto res =       g[((j - 2) * cols + i - 2) ] * 0 + g[((j - 2) * cols + i -1) ] * 0 +  g[((j - 2) * cols + i) ]* -1 + g[((j - 2) * cols + i +1 ) ] * 0 + g[((j - 2) * cols + i + 2) ] *0
+                  +  g[((j - 1) * cols + i - 2) ] * 0 + g[((j - 1) * cols + i -1) ] * -1 +  g[((j - 1) * cols + i) ]* -2 + g[((j - 1) * cols + i +1 ) ] * -1 + g[((j - 1) * cols + i + 2) ] *0
+                  +     g[((j) * cols + i - 2) ] * -1 + g[((j) * cols + i -1) ] * -2 +  g[((j) * cols + i) ]* 16 + g[((j) * cols + i +1 ) ] * -2 + g[((j) * cols + i + 2) ] * -1
+                  +    g[((j + 1) * cols + i - 2) ] * 0 + g[((j +1) * cols + i -1) ] * -1 +  g[((j + 1) * cols + i) ]* -2 + g[((j + 1) * cols + i +1 ) ] * -1 + g[((j + 1) * cols + i + 2) ] *0
+                  +    g[((j + 2) * cols + i - 2) ] * 0 + g[((j + 2) * cols + i -1) ] * 0 +  g[((j + 2) * cols + i) ]* -1 + g[((j + 2) * cols + i +1 ) ] * 0 + g[((j + 2) * cols + i + 2) ] *0;
+
+      res = res > 255 ? 255 : res;
+      res = res < 0 ? 0 : res;
+
+      s[j * cols + i] = res;
   }
 }
 
@@ -81,6 +95,9 @@ __global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t 
     res = res > 65535 ? res = 65535 : res;
 
     s[ j * cols + i ] = sqrtf( res );
+
+
+
   }
 }
 
@@ -181,11 +198,11 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-  /*
+
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  sobel<<< grid0, block >>>( g_d, s_d, cols, rows );
-  */
+  laplacian_gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
+
 
   /*
   // Version en 2 étapes, Sobel avec mémoire shared.
@@ -194,7 +211,7 @@ int main()
   */
 
   // Version fusionnée.
-  grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
