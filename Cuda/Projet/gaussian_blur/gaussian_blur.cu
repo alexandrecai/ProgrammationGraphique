@@ -49,7 +49,7 @@ __global__ void gaussian( unsigned char * g, unsigned char * s, std::size_t cols
  * Kernel pour obtenir les contours à partir de l'image en niveaux de gris, en utilisant la mémoire shared
  * pour limiter les accès à la mémoire globale.
  */
-__global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
+__global__ void gaussian_shared( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
 {
   auto li = threadIdx.x;
   auto lj = threadIdx.y;
@@ -69,20 +69,22 @@ __global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t 
 
   __syncthreads();
 
-  if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
+  if( i < cols -3 && j < rows-3 && li > 0 && li < (w-3) && lj > 0 && lj < (h-3) )
   {
-    auto h =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
-           + 2 * sh[ (lj  )*w + li - 1 ] - 2 * sh[ (lj  )*w + li + 1 ]
-           +     sh[ (lj+1)*w + li - 1 ] -     sh[ (lj+1)*w + li + 1 ];
+    auto total =   
+                      0 * g[((j - 3) * cols + i - 3) ]  +  0 * g[((j - 3) * cols + i - 2) ] +   0 * g[((j - 3) * cols + i - 1) ] +   5 * g[((j - 3) * cols + i) ] +   0 * g[((j - 3) * cols + i + 1) ]  +  0 * g[((j - 3) * cols + i + 2) ] + 0 * g[((j - 3) * cols + i + 3) ]
+                    + 0 * g[((j - 2) * cols + i - 3) ]  +  5 * g[((j - 2) * cols + i - 2) ] +  18 * g[((j - 2) * cols + i - 1) ] +  32 * g[((j - 2) * cols + i) ] +  18 * g[((j - 2) * cols + i + 1) ]  +  5 * g[((j - 2) * cols + i + 2) ] + 0 * g[((j - 2) * cols + i + 3) ]
+                    + 0 * g[((j - 1) * cols + i - 3) ]  + 18 * g[((j - 1) * cols + i - 2) ] +  64 * g[((j - 1) * cols + i - 1) ] + 100 * g[((j - 1) * cols + i) ] +  64 * g[((j - 1) * cols + i + 1) ]  + 18 * g[((j - 1) * cols + i + 2) ] + 0 * g[((j - 1) * cols + i + 3) ]
+                    + 5 * g[((j) * cols + i - 3) ]      + 32 * g[((j) * cols + i - 2) ]     + 100 * g[((j) * cols + i - 1) ]     + 100 * g[((j) * cols + i) ]     + 100 * g[((j) * cols + i + 1) ]      + 32 * g[((j) * cols+ i + 2) ]     + 5 * g[((j) * cols + i + 3) ]
+                    + 0 * g[((j + 1) * cols + i - 3) ]  + 18 * g[((j + 1) * cols + i - 2) ] +  64 * g[((j + 1) * cols + i - 1) ] + 100 * g[((j + 1) * cols + i) ] +  64 * g[((j + 1) * cols + i + 1) ]  + 18 * g[((j + 1) * cols + i + 2) ] + 0 * g[((j + 1) * cols + i + 3) ]
+                    + 0 * g[((j + 2) * cols + i - 3) ]  +  5 * g[((j + 2) * cols + i - 2) ] +  18 * g[((j + 2) * cols + i - 1) ] +  32 * g[((j + 2) * cols + i) ] +  18 * g[((j + 2) * cols + i + 1) ]  +  5 * g[((j + 2) * cols + i + 2) ] + 0 * g[((j + 2) * cols + i + 3) ]
+                    + 0 * g[((j + 3) * cols + i - 3) ]  +  0 * g[((j + 3) * cols + i - 2) ] +   0 * g[((j + 3) * cols + i - 1) ] +   5 * g[((j + 3) * cols + i) ] +   0 * g[((j + 3) * cols + i + 1) ]  +  0 * g[((j + 3) * cols + i + 2) ] + 0 * g[((j + 3) * cols + i + 3) ]
+                    ;
 
-    auto v =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj+1)*w + li - 1 ]
-           + 2 * sh[ (lj-1)*w + li     ] - 2 * sh[ (lj+1)*w + li     ]
-           +     sh[ (lj-1)*w + li + 1 ] -     sh[ (lj+1)*w + li + 1 ];
 
-    auto res = h*h + v*v;
-    res = res > 65535 ? res = 65535 : res;
+    auto res = total/1068;
 
-    s[ j * cols + i ] = sqrtf( res );
+    s[j * cols + i] = res;
   }
 }
 
@@ -185,15 +187,15 @@ int main()
 
   
   // Version en 2 étapes.
-  grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
+  //grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
+  //gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
   
 
-  /*
-  // Version en 2 étapes, Sobel avec mémoire shared.
+  
+  // Version en 2 étapes, Gaussian Blur avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  sobel_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-  */
+  gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
+  
 
   // Version fusionnée.
   //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
