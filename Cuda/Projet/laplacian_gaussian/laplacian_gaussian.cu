@@ -81,7 +81,7 @@ __global__ void laplacian_gaussian_shared( unsigned char * g, unsigned char * s,
 
   __syncthreads();
 
-  if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
+  if( i < cols -2 && j < rows-2 && li > 1 && li < (w-2) && lj > 1 && lj < (h-2) )
   {
       /*
     auto h =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
