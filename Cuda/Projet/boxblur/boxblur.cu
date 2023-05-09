@@ -78,12 +78,12 @@ __global__ void boxblur_shared( unsigned char * g, unsigned char * s, std::size_
        */
 
     auto total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
-                    +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li - +1 ) ]
+                    +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li +1 ) ]
                     +     sh[((lj + 1) * w + li - 1) ] +  sh[( (lj + 1) * w + li) ]  + sh[((lj + 1) * w + li + 1) ];
 
 
     auto res = total/9;
-    s[(rows - j - 1) * cols + i] = res;
+    s[j * cols + i] = res;
     /*
     auto res = h*h + v*v;
     res = res > 65535 ? res = 65535 : res;
@@ -141,12 +141,12 @@ __global__ void grayscale_boxblur_shared( unsigned char * rgb, unsigned char * s
        */
 
       auto total =       sh[((lj - 1) * w + li - 1) ] + sh[((lj - 1) * w + li) ]  +  sh[((lj - 1) * w + li + 1) ]
-                    +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li - +1 ) ]
+                    +  sh[( lj  * w + li - 1) ] + sh[( lj * w + li) ] + sh[( lj * w + li +1 ) ]
                     +     sh[((lj + 1) * w + li - 1) ] +  sh[( (lj + 1) * w + li) ]  + sh[((lj + 1) * w + li + 1) ];
 
 
       auto res = total/9;
-      s[(rows - j - 1) * cols + i] = res;
+      s[j * cols + i] = res;
 
 
   }
@@ -202,17 +202,17 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-
+  /*
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   boxblur<<< grid0, block >>>( g_d, s_d, cols, rows );
+  */
 
 
-  /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   boxblur_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-  */
+
 
   // Version fusionnée.
   //grayscale_boxblur_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
