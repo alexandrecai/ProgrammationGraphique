@@ -63,7 +63,7 @@ __global__ void edge_detection( unsigned char * g, unsigned char * s, std::size_
  * Kernel pour obtenir les contours à partir de l'image en niveaux de gris, en utilisant la mémoire shared
  * pour limiter les accès à la mémoire globale.
  */
-__global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
+__global__ void edge_detection_shared( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
 {
   auto li = threadIdx.x;
   auto lj = threadIdx.y;
@@ -85,6 +85,7 @@ __global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t 
 
   if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
   {
+      /*
     auto h =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
            + 2 * sh[ (lj  )*w + li - 1 ] - 2 * sh[ (lj  )*w + li + 1 ]
            +     sh[ (lj+1)*w + li - 1 ] -     sh[ (lj+1)*w + li + 1 ];
@@ -97,6 +98,21 @@ __global__ void sobel_shared( unsigned char * g, unsigned char * s, std::size_t 
     res = res > 65535 ? res = 65535 : res;
 
     s[ j * cols + i ] = sqrtf( res );
+    */
+      auto contour = -1;
+      auto middle = 8;
+
+      auto res =       sh[((j - 1) * cols + i - 1) ] * contour + sh[((j - 1) * cols + i) ] * contour +  sh[((j - 1) * cols + i + 1) ]* contour
+                       +  sh[( j * cols + i - 1) ]* contour + sh[( j * cols + i) ]* middle + sh[( j * cols + i  +1 ) ]* contour
+                       +     sh[((j + 1) * cols + i - 1) ]* contour +  sh[( (j + 1) * cols + i) ] * contour + sh[((j + 1) * cols + i + 1) ]* contour;
+
+      //out_boxblur[ j * width + i ] = sqrt(res);
+      res = res > 255 ? 255 : res;
+      res = res < 0 ? 0 : res;
+
+      s[j * cols + i] = res;
+
+
   }
 }
 
@@ -150,7 +166,7 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
 
 int main()
 {
-  cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED );
+  cv::Mat m_in = cv::imread("../images/flower.jpg", cv::IMREAD_UNCHANGED );
 
   //auto rgb = m_in.data;
   auto rows = m_in.rows;
@@ -197,17 +213,17 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-
+  /*
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   edge_detection<<< grid0, block >>>( g_d, s_d, cols, rows );
+  */
 
 
-  /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  sobel_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-  */
+  edge_detection_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
+
 
   // Version fusionnée.
   //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
