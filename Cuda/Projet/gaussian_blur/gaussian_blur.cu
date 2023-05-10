@@ -121,13 +121,13 @@ __global__ void grayscale_gaussian_shared( unsigned char * rgb, unsigned char * 
   if( i < cols -3 && j < rows-3 && li > 3 && li < (w-3) && lj > 3 && lj < (h-3) )
   {
     auto total =   
-                      0 * g[((j - 3) * cols + i - 3) ]  +  0 * g[((j - 3) * cols + i - 2) ] +   0 * g[((j - 3) * cols + i - 1) ] +   5 * g[((j - 3) * cols + i) ] +   0 * g[((j - 3) * cols + i + 1) ]  +  0 * g[((j - 3) * cols + i + 2) ] + 0 * g[((j - 3) * cols + i + 3) ]
-                    + 0 * g[((j - 2) * cols + i - 3) ]  +  5 * g[((j - 2) * cols + i - 2) ] +  18 * g[((j - 2) * cols + i - 1) ] +  32 * g[((j - 2) * cols + i) ] +  18 * g[((j - 2) * cols + i + 1) ]  +  5 * g[((j - 2) * cols + i + 2) ] + 0 * g[((j - 2) * cols + i + 3) ]
-                    + 0 * g[((j - 1) * cols + i - 3) ]  + 18 * g[((j - 1) * cols + i - 2) ] +  64 * g[((j - 1) * cols + i - 1) ] + 100 * g[((j - 1) * cols + i) ] +  64 * g[((j - 1) * cols + i + 1) ]  + 18 * g[((j - 1) * cols + i + 2) ] + 0 * g[((j - 1) * cols + i + 3) ]
-                    + 5 * g[((j) * cols + i - 3) ]      + 32 * g[((j) * cols + i - 2) ]     + 100 * g[((j) * cols + i - 1) ]     + 100 * g[((j) * cols + i) ]     + 100 * g[((j) * cols + i + 1) ]      + 32 * g[((j) * cols+ i + 2) ]     + 5 * g[((j) * cols + i + 3) ]
-                    + 0 * g[((j + 1) * cols + i - 3) ]  + 18 * g[((j + 1) * cols + i - 2) ] +  64 * g[((j + 1) * cols + i - 1) ] + 100 * g[((j + 1) * cols + i) ] +  64 * g[((j + 1) * cols + i + 1) ]  + 18 * g[((j + 1) * cols + i + 2) ] + 0 * g[((j + 1) * cols + i + 3) ]
-                    + 0 * g[((j + 2) * cols + i - 3) ]  +  5 * g[((j + 2) * cols + i - 2) ] +  18 * g[((j + 2) * cols + i - 1) ] +  32 * g[((j + 2) * cols + i) ] +  18 * g[((j + 2) * cols + i + 1) ]  +  5 * g[((j + 2) * cols + i + 2) ] + 0 * g[((j + 2) * cols + i + 3) ]
-                    + 0 * g[((j + 3) * cols + i - 3) ]  +  0 * g[((j + 3) * cols + i - 2) ] +   0 * g[((j + 3) * cols + i - 1) ] +   5 * g[((j + 3) * cols + i) ] +   0 * g[((j + 3) * cols + i + 1) ]  +  0 * g[((j + 3) * cols + i + 2) ] + 0 * g[((j + 3) * cols + i + 3) ]
+                      0 * sh[((j - 3) * cols + i - 3) ]  +  0 * sh[((j - 3) * cols + i - 2) ] +   0 * sh[((j - 3) * cols + i - 1) ] +   5 * sh[((j - 3) * cols + i) ] +   0 * sh[((j - 3) * cols + i + 1) ]  +  0 * sh[((j - 3) * cols + i + 2) ] + 0 * sh[((j - 3) * cols + i + 3) ]
+                    + 0 * sh[((j - 2) * cols + i - 3) ]  +  5 * sh[((j - 2) * cols + i - 2) ] +  18 * sh[((j - 2) * cols + i - 1) ] +  32 * sh[((j - 2) * cols + i) ] +  18 * sh[((j - 2) * cols + i + 1) ]  +  5 * sh[((j - 2) * cols + i + 2) ] + 0 * sh[((j - 2) * cols + i + 3) ]
+                    + 0 * sh[((j - 1) * cols + i - 3) ]  + 18 * sh[((j - 1) * cols + i - 2) ] +  64 * sh[((j - 1) * cols + i - 1) ] + 100 * sh[((j - 1) * cols + i) ] +  64 * sh[((j - 1) * cols + i + 1) ]  + 18 * sh[((j - 1) * cols + i + 2) ] + 0 * sh[((j - 1) * cols + i + 3) ]
+                    + 5 * sh[((j) * cols + i - 3) ]      + 32 * sh[((j) * cols + i - 2) ]     + 100 * sh[((j) * cols + i - 1) ]     + 100 * sh[((j) * cols + i) ]     + 100 * sh[((j) * cols + i + 1) ]      + 32 * sh[((j) * cols+ i + 2) ]      + 5 * sh[((j) * cols + i + 3) ]
+                    + 0 * sh[((j + 1) * cols + i - 3) ]  + 18 * sh[((j + 1) * cols + i - 2) ] +  64 * sh[((j + 1) * cols + i - 1) ] + 100 * sh[((j + 1) * cols + i) ] +  64 * sh[((j + 1) * cols + i + 1) ]  + 18 * sh[((j + 1) * cols + i + 2) ] + 0 * sh[((j + 1) * cols + i + 3) ]
+                    + 0 * sh[((j + 2) * cols + i - 3) ]  +  5 * sh[((j + 2) * cols + i - 2) ] +  18 * sh[((j + 2) * cols + i - 1) ] +  32 * sh[((j + 2) * cols + i) ] +  18 * sh[((j + 2) * cols + i + 1) ]  +  5 * sh[((j + 2) * cols + i + 2) ] + 0 * sh[((j + 2) * cols + i + 3) ]
+                    + 0 * sh[((j + 3) * cols + i - 3) ]  +  0 * sh[((j + 3) * cols + i - 2) ] +   0 * sh[((j + 3) * cols + i - 1) ] +   5 * sh[((j + 3) * cols + i) ] +   0 * sh[((j + 3) * cols + i + 1) ]  +  0 * sh[((j + 3) * cols + i + 2) ] + 0 * sh[((j + 3) * cols + i + 3) ]
                     ;
 
 
