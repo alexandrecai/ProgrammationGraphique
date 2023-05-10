@@ -69,8 +69,8 @@ __global__ void laplacian_gaussian_shared( unsigned char * g, unsigned char * s,
   auto w = blockDim.x;
   auto h = blockDim.y;
 
-  auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
-  auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
+  auto i = blockIdx.x * (blockDim.x-5) + threadIdx.x;
+  auto j = blockIdx.y * (blockDim.y-5) + threadIdx.y;
 
   extern __shared__ unsigned char sh[];
 
@@ -81,22 +81,8 @@ __global__ void laplacian_gaussian_shared( unsigned char * g, unsigned char * s,
 
   __syncthreads();
 
-  if( i < cols -2 && j < rows-2 && li > 1 && li < (w-2) && lj > 1 && lj < (h-2) )
+  if( i < cols -2 && j < rows-2 && li > 2 && li < (w-2) && lj > 2 && lj < (h-2) )
   {
-      /*
-    auto h =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
-           + 2 * sh[ (lj  )*w + li - 1 ] - 2 * sh[ (lj  )*w + li + 1 ]
-           +     sh[ (lj+1)*w + li - 1 ] -     sh[ (lj+1)*w + li + 1 ];
-
-    auto v =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj+1)*w + li - 1 ]
-           + 2 * sh[ (lj-1)*w + li     ] - 2 * sh[ (lj+1)*w + li     ]
-           +     sh[ (lj-1)*w + li + 1 ] -     sh[ (lj+1)*w + li + 1 ];
-
-    auto res = h*h + v*v;
-    res = res > 65535 ? res = 65535 : res;
-
-    s[ j * cols + i ] = sqrtf( res );
-       */
 
       auto res =       sh[((lj - 2) * w + li - 2) ] * 0 + sh[((lj - 2) * w + li -1) ] * 0 +  sh[((lj - 2) * w + li) ]* -1 + sh[((lj - 2) * w + li +1 ) ] * 0 + sh[((lj - 2) * w + li + 2) ] *0
                        +  sh[((lj - 1) * w + li - 2) ] * 0 + sh[((lj - 1) * w + li -1) ] * -1 +  sh[((lj - 1) * w + li) ]* -2 + sh[((lj - 1) * w + li +1 ) ] * -1 + sh[((lj - 1) * w + li + 2) ] *0
@@ -192,13 +178,13 @@ int main()
   cudaMemcpy( rgb_d, rgb, 3 * rows * cols, cudaMemcpyHostToDevice );
 
   dim3 block( 32, 4 );
-  dim3 grid0( ( cols - 1) / block.x + 1 , ( rows - 1 ) / block.y + 1 );
+  dim3 grid0( ( cols - 2) / block.x + 1 , ( rows - 2 ) / block.y + 1 );
   /**
    * Pour la version shared il faut faire superposer les blocs de 2 pixels
    * pour ne pas avoir de bandes non calculées autour des blocs
    * on crée donc plus de blocs.
    */
-  dim3 grid1( ( cols - 1) / (block.x-2) + 1 , ( rows - 1 ) / (block.y-2) + 1 );
+  dim3 grid1( ( cols - 2) / (block.x-5) + 1 , ( rows - 2 ) / (block.y-5) + 1 );
     
   cudaEvent_t start, stop;
 
