@@ -163,7 +163,7 @@ int main()
   cudaMemcpy( rgb_d, rgb, 3 * rows * cols, cudaMemcpyHostToDevice );
 
   dim3 block( 64, 8 );
-  dim3 grid0( ( cols - 2) / block.x + 1 , ( rows - 2 ) / block.y + 1 );
+  dim3 grid0( ( cols - 1) / block.x + 1 , ( rows - 1 ) / block.y + 1 );
   /**
    * Pour la version shared il faut faire superposer les blocs de 2 pixels
    * pour ne pas avoir de bandes non calculées autour des blocs
@@ -179,17 +179,15 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-    /*
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   laplacian_gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
-    */
 
-
+    /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-    
+    */
 
   // Version fusionnée.
   //grayscale_laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
