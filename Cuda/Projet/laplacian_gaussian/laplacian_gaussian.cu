@@ -25,7 +25,7 @@ __global__ void laplacian_gaussian( unsigned char * g, unsigned char * s, std::s
   auto i = blockIdx.x * blockDim.x + threadIdx.x;
   auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-  if( i > 1 && i < cols && j > 1 && j < rows )
+  if( i > 2 && i < cols && j > 2 && j < rows )
   {
 
       auto res =       g[((j - 2) * cols + i - 2) ] * 0 + g[((j - 2) * cols + i -1) ] * 0 +  g[((j - 2) * cols + i) ]* -1 + g[((j - 2) * cols + i +1 ) ] * 0 + g[((j - 2) * cols + i + 2) ] *0
@@ -181,7 +181,7 @@ int main()
 
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  laplacian_gaussian<<< grid1, block >>>( g_d, s_d, cols, rows );
+  laplacian_gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
 
     /*
   // Version en 2 étapes, Sobel avec mémoire shared.
