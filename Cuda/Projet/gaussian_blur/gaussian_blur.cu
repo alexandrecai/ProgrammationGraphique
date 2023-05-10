@@ -57,8 +57,8 @@ __global__ void gaussian_shared( unsigned char * g, unsigned char * s, std::size
   auto w = blockDim.x;
   auto h = blockDim.y;
 
-  auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
-  auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
+  auto i = blockIdx.x * (blockDim.x-7) + threadIdx.x;
+  auto j = blockIdx.y * (blockDim.y-7) + threadIdx.y;
 
   extern __shared__ unsigned char sh[];
 
@@ -69,7 +69,7 @@ __global__ void gaussian_shared( unsigned char * g, unsigned char * s, std::size
 
   __syncthreads();
 
-  if( i < cols -3 && j < rows-3 && li > 0 && li < (w-3) && lj > 0 && lj < (h-3) )
+  if( i < cols -3 && j < rows-3 && li > 3 && li < (w-3) && lj > 3 && lj < (h-3) )
   {
     auto total =   
                       0 * g[((j - 3) * cols + i - 3) ]  +  0 * g[((j - 3) * cols + i - 2) ] +   0 * g[((j - 3) * cols + i - 1) ] +   5 * g[((j - 3) * cols + i) ] +   0 * g[((j - 3) * cols + i + 1) ]  +  0 * g[((j - 3) * cols + i + 2) ] + 0 * g[((j - 3) * cols + i + 3) ]
@@ -168,14 +168,14 @@ int main()
 
   cudaMemcpy( rgb_d, rgb, 3 * rows * cols, cudaMemcpyHostToDevice );
 
-  dim3 block( 32, 4 );
+  dim3 block( 64, 8 );
   dim3 grid0( ( cols - 1) / block.x + 1 , ( rows - 1 ) / block.y + 1 );
   /**
    * Pour la version shared il faut faire superposer les blocs de 2 pixels
    * pour ne pas avoir de bandes non calculées autour des blocs
    * on crée donc plus de blocs.
    */
-  dim3 grid1( ( cols - 1) / (block.x-2) + 1 , ( rows - 1 ) / (block.y-2) + 1 );
+  dim3 grid1( ( cols - 3) / (block.x-7) + 1 , ( rows - 3 ) / (block.y-7) + 1 );
     
   cudaEvent_t start, stop;
 
