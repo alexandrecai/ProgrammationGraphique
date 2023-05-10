@@ -27,21 +27,6 @@ __global__ void laplacian_gaussian( unsigned char * g, unsigned char * s, std::s
 
   if( i > 1 && i < cols && j > 1 && j < rows )
   {
-      /*
-    auto h =     g[ (j-1)*cols + i - 1 ] -     g[ (j-1)*cols + i + 1 ]
-           + 2 * g[ (j  )*cols + i - 1 ] - 2 * g[ (j  )*cols + i + 1 ]
-           +     g[ (j+1)*cols + i - 1 ] -     g[ (j+1)*cols + i + 1 ];
-
-    auto v =     g[ (j-1)*cols + i - 1 ] -     g[ (j+1)*cols + i - 1 ]
-           + 2 * g[ (j-1)*cols + i     ] - 2 * g[ (j+1)*cols + i     ]
-           +     g[ (j-1)*cols + i + 1 ] -     g[ (j+1)*cols + i + 1 ];
-
-    auto res = h*h + v*v;
-    res = res > 65535 ? res = 65535 : res;
-
-    s[ j * cols + i ] = sqrtf( res );
-    */
-
 
       auto res =       g[((j - 2) * cols + i - 2) ] * 0 + g[((j - 2) * cols + i -1) ] * 0 +  g[((j - 2) * cols + i) ]* -1 + g[((j - 2) * cols + i +1 ) ] * 0 + g[((j - 2) * cols + i + 2) ] *0
                   +  g[((j - 1) * cols + i - 2) ] * 0 + g[((j - 1) * cols + i -1) ] * -1 +  g[((j - 1) * cols + i) ]* -2 + g[((j - 1) * cols + i +1 ) ] * -1 + g[((j - 1) * cols + i + 2) ] *0
@@ -147,7 +132,7 @@ __global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsign
 
 int main()
 {
-  cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED );
+  cv::Mat m_in = cv::imread("../images/mountain.jpg", cv::IMREAD_UNCHANGED );
 
   //auto rgb = m_in.data;
   auto rows = m_in.rows;
@@ -194,17 +179,17 @@ int main()
   // Mesure du temps de calcul du kernel uniquement.
   cudaEventRecord( start );
 
-    /*
+
   // Version en 2 étapes.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   laplacian_gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
-    */
 
 
+    /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-
+    */
 
   // Version fusionnée.
   //grayscale_laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
