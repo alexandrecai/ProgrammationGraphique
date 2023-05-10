@@ -25,7 +25,7 @@ __global__ void laplacian_gaussian( unsigned char * g, unsigned char * s, std::s
   auto i = blockIdx.x * blockDim.x + threadIdx.x;
   auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-  if( i > 1 && i < cols && j > 1 && j < rows )
+  if( i > 2 && i < cols && j > 2 && j < rows )
   {
 
       auto res =       g[((j - 2) * cols + i - 2) ] * 0 + g[((j - 2) * cols + i -1) ] * 0 +  g[((j - 2) * cols + i) ]* -1 + g[((j - 2) * cols + i +1 ) ] * 0 + g[((j - 2) * cols + i + 2) ] *0
@@ -163,7 +163,7 @@ int main()
   cudaMemcpy( rgb_d, rgb, 3 * rows * cols, cudaMemcpyHostToDevice );
 
   dim3 block( 64, 8 );
-  dim3 grid0( ( cols - 2) / block.x + 1 , ( rows - 2 ) / block.y + 1 );
+  dim3 grid0( ( cols - 1) / block.x + 1 , ( rows - 1 ) / block.y + 1 );
   /**
    * Pour la version shared il faut faire superposer les blocs de 2 pixels
    * pour ne pas avoir de bandes non calculées autour des blocs
