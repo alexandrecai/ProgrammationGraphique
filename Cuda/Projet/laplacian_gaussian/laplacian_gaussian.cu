@@ -104,8 +104,8 @@ __global__ void laplacian_gaussian_shared( unsigned char * g, unsigned char * s,
  * Kernel fusionnant le passage en niveaux de gris et la détection de contours.
  */
 __global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
-  auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
-  auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
+    auto i = blockIdx.x * (blockDim.x-5) + threadIdx.x;
+    auto j = blockIdx.y * (blockDim.y-5) + threadIdx.y;
 
   auto li = threadIdx.x;
   auto lj = threadIdx.y;
@@ -128,8 +128,8 @@ __global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsign
    * par tous les threads du bloc avant de pouvoir accéder aux données des pixels voisins.
    */
   __syncthreads();
- 
-  if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
+
+  if( i < cols -2 && j < rows-2 && li > 2 && li < (w-2) && lj > 2 && lj < (h-2) )
   {
       auto res =       sh[((lj - 2) * w + li - 2) ] * 0 + sh[((lj - 2) * w + li -1) ] * 0 +  sh[((lj - 2) * w + li) ]* -1 + sh[((lj - 2) * w + li +1 ) ] * 0 + sh[((lj - 2) * w + li + 2) ] *0
                        +  sh[((lj - 1) * w + li - 2) ] * 0 + sh[((lj - 1) * w + li -1) ] * -1 +  sh[((lj - 1) * w + li) ]* -2 + sh[((lj - 1) * w + li +1 ) ] * -1 + sh[((lj - 1) * w + li + 2) ] *0
@@ -200,14 +200,14 @@ int main()
   laplacian_gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
     */
 
-
+    /*
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-
+    */
 
   // Version fusionnée.
-  //grayscale_laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  grayscale_laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
