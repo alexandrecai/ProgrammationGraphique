@@ -25,7 +25,7 @@ __global__ void laplacian_gaussian( unsigned char * g, unsigned char * s, std::s
   auto i = blockIdx.x * blockDim.x + threadIdx.x;
   auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-  if( i > 2 && i < cols && j > 2 && j < rows )
+  if( i > 0 && i < cols && j > 0 && j < rows )
   {
 
       auto res =       g[((j - 2) * cols + i - 2) ] * 0 + g[((j - 2) * cols + i -1) ] * 0 +  g[((j - 2) * cols + i) ]* -1 + g[((j - 2) * cols + i +1 ) ] * 0 + g[((j - 2) * cols + i + 2) ] *0
