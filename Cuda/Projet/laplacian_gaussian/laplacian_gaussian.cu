@@ -69,8 +69,8 @@ __global__ void laplacian_gaussian_shared( unsigned char * g, unsigned char * s,
   auto w = blockDim.x;
   auto h = blockDim.y;
 
-  auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
-  auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
+  auto i = blockIdx.x * (blockDim.x-4) + threadIdx.x;
+  auto j = blockIdx.y * (blockDim.y-4) + threadIdx.y;
 
   extern __shared__ unsigned char sh[];
 
