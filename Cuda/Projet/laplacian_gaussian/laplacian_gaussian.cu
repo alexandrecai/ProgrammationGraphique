@@ -185,14 +185,14 @@ int main()
   laplacian_gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
     */
 
-    /*
+
   // Version en 2 étapes, Sobel avec mémoire shared.
   grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
   laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
-    */
+    
 
   // Version fusionnée.
-  grayscale_laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  //grayscale_laplacian_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
