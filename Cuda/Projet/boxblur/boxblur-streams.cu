@@ -39,7 +39,8 @@ int main() {
     cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED);
     auto rows = m_in.rows;
     auto cols = m_in.cols;
-
+    unsigned char * g = nullptr;
+    cv::Mat m_out( rows, cols, CV_8UC1, g );
 
 
     // Allocation et copie des données sur le GPU
@@ -79,7 +80,7 @@ int main() {
     cudaDeviceSynchronize();
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Execution time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
-    cv::imwrite( "out.jpg", out );
+    cv::imwrite( "out.jpg", m_out );
     // Libération de la mémoire
     cudaFree(rgb_d);
     cudaFree(g_d);
