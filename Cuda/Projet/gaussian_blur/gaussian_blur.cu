@@ -72,13 +72,13 @@ __global__ void gaussian_shared( unsigned char * g, unsigned char * s, std::size
   if( i < cols -3 && j < rows-3 && li > 3 && li < (w-3) && lj > 3 && lj < (h-3) )
   {
     auto total =   
-                      0 * g[((j - 3) * cols + i - 3) ]  +  0 * g[((j - 3) * cols + i - 2) ] +   0 * g[((j - 3) * cols + i - 1) ] +   5 * g[((j - 3) * cols + i) ] +   0 * g[((j - 3) * cols + i + 1) ]  +  0 * g[((j - 3) * cols + i + 2) ] + 0 * g[((j - 3) * cols + i + 3) ]
-                    + 0 * g[((j - 2) * cols + i - 3) ]  +  5 * g[((j - 2) * cols + i - 2) ] +  18 * g[((j - 2) * cols + i - 1) ] +  32 * g[((j - 2) * cols + i) ] +  18 * g[((j - 2) * cols + i + 1) ]  +  5 * g[((j - 2) * cols + i + 2) ] + 0 * g[((j - 2) * cols + i + 3) ]
-                    + 0 * g[((j - 1) * cols + i - 3) ]  + 18 * g[((j - 1) * cols + i - 2) ] +  64 * g[((j - 1) * cols + i - 1) ] + 100 * g[((j - 1) * cols + i) ] +  64 * g[((j - 1) * cols + i + 1) ]  + 18 * g[((j - 1) * cols + i + 2) ] + 0 * g[((j - 1) * cols + i + 3) ]
-                    + 5 * g[((j) * cols + i - 3) ]      + 32 * g[((j) * cols + i - 2) ]     + 100 * g[((j) * cols + i - 1) ]     + 100 * g[((j) * cols + i) ]     + 100 * g[((j) * cols + i + 1) ]      + 32 * g[((j) * cols+ i + 2) ]     + 5 * g[((j) * cols + i + 3) ]
-                    + 0 * g[((j + 1) * cols + i - 3) ]  + 18 * g[((j + 1) * cols + i - 2) ] +  64 * g[((j + 1) * cols + i - 1) ] + 100 * g[((j + 1) * cols + i) ] +  64 * g[((j + 1) * cols + i + 1) ]  + 18 * g[((j + 1) * cols + i + 2) ] + 0 * g[((j + 1) * cols + i + 3) ]
-                    + 0 * g[((j + 2) * cols + i - 3) ]  +  5 * g[((j + 2) * cols + i - 2) ] +  18 * g[((j + 2) * cols + i - 1) ] +  32 * g[((j + 2) * cols + i) ] +  18 * g[((j + 2) * cols + i + 1) ]  +  5 * g[((j + 2) * cols + i + 2) ] + 0 * g[((j + 2) * cols + i + 3) ]
-                    + 0 * g[((j + 3) * cols + i - 3) ]  +  0 * g[((j + 3) * cols + i - 2) ] +   0 * g[((j + 3) * cols + i - 1) ] +   5 * g[((j + 3) * cols + i) ] +   0 * g[((j + 3) * cols + i + 1) ]  +  0 * g[((j + 3) * cols + i + 2) ] + 0 * g[((j + 3) * cols + i + 3) ]
+                      0 * g[((lj - 3) * w + li - 3) ]  +  0 * g[((lj - 3) * w + li - 2) ] +   0 * g[((lj - 3) * w + li - 1) ] +   5 * g[((lj - 3) * w + li) ] +   0 * g[((lj - 3) * w + li + 1) ]  +  0 * g[((lj - 3) * w + li + 2) ] + 0 * g[((lj - 3) * w + li + 3) ]
+                    + 0 * g[((lj - 2) * w + li - 3) ]  +  5 * g[((lj - 2) * w + li - 2) ] +  18 * g[((lj - 2) * w + li - 1) ] +  32 * g[((lj - 2) * w + li) ] +  18 * g[((lj - 2) * w + li + 1) ]  +  5 * g[((lj - 2) * w + li + 2) ] + 0 * g[((lj - 2) * w + li + 3) ]
+                    + 0 * g[((lj - 1) * w + li - 3) ]  + 18 * g[((lj - 1) * w + li - 2) ] +  64 * g[((lj - 1) * w + li - 1) ] + 100 * g[((lj - 1) * w + li) ] +  64 * g[((lj - 1) * w + li + 1) ]  + 18 * g[((lj - 1) * w + li + 2) ] + 0 * g[((lj - 1) * w + li + 3) ]
+                    + 5 * g[((lj) * w + li - 3) ]      + 32 * g[((lj) * w + li - 2) ]     + 100 * g[((lj) * w + li - 1) ]     + 100 * g[((lj) * w + li) ]     + 100 * g[((lj) * w + li + 1) ]      + 32 * g[((lj) * w + li + 2) ]     + 5 * g[((lj) * w + li + 3) ]
+                    + 0 * g[((lj + 1) * w + li - 3) ]  + 18 * g[((lj + 1) * w + li - 2) ] +  64 * g[((lj + 1) * w + li - 1) ] + 100 * g[((lj + 1) * w + li) ] +  64 * g[((lj + 1) * w + li + 1) ]  + 18 * g[((lj + 1) * w + li + 2) ] + 0 * g[((lj + 1) * w + li + 3) ]
+                    + 0 * g[((lj + 2) * w + li - 3) ]  +  5 * g[((lj + 2) * w + li - 2) ] +  18 * g[((lj + 2) * w + li - 1) ] +  32 * g[((lj + 2) * w + li) ] +  18 * g[((lj + 2) * w + li + 1) ]  +  5 * g[((lj + 2) * w + li + 2) ] + 0 * g[((lj + 2) * w + li + 3) ]
+                    + 0 * g[((lj + 3) * w + li - 3) ]  +  0 * g[((lj + 3) * w + li - 2) ] +   0 * g[((lj + 3) * w + li - 1) ] +   5 * g[((lj + 3) * w + li) ] +   0 * g[((lj + 3) * w + li + 1) ]  +  0 * g[((lj + 3) * w + li + 2) ] + 0 * g[((lj + 3) * w + li + 3) ]
                     ;
 
 
@@ -92,9 +92,9 @@ __global__ void gaussian_shared( unsigned char * g, unsigned char * s, std::size
 /**
  * Kernel fusionnant le passage en niveaux de gris et la détection de contours.
  */
-__global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
-  auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
-  auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
+__global__ void grayscale_gaussian_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
+  auto i = blockIdx.x * (blockDim.x-7) + threadIdx.x;
+  auto j = blockIdx.y * (blockDim.y-7) + threadIdx.y;
 
   auto li = threadIdx.x;
   auto lj = threadIdx.y;
@@ -118,20 +118,22 @@ __global__ void grayscale_sobel_shared( unsigned char * rgb, unsigned char * s, 
    */
   __syncthreads();
  
-  if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
+  if( i < cols -3 && j < rows-3 && li > 3 && li < (w-3) && lj > 3 && lj < (h-3) )
   {
-    auto hr =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj-1)*w + li + 1 ]
-           + 2 * sh[ (lj  )*w + li - 1 ] - 2 * sh[ (lj  )*w + li + 1 ]
-           +     sh[ (lj+1)*w + li - 1 ] -     sh[ (lj+1)*w + li + 1 ];
+    auto total =   
+                      0 * sh[((lj - 3) * w + li - 3) ]  +  0 * sh[((lj - 3) * w + li - 2) ] +   0 * sh[((lj - 3) * w + li - 1) ] +   5 * sh[((lj - 3) * w + li) ] +   0 * sh[((lj - 3) * w + li + 1) ]  +  0 * sh[((lj - 3) * w + li + 2) ] + 0 * sh[((lj - 3) * w + li + 3) ]
+                    + 0 * sh[((lj - 2) * w + li - 3) ]  +  5 * sh[((lj - 2) * w + li - 2) ] +  18 * sh[((lj - 2) * w + li - 1) ] +  32 * sh[((lj - 2) * w + li) ] +  18 * sh[((lj - 2) * w + li + 1) ]  +  5 * sh[((lj - 2) * w + li + 2) ] + 0 * sh[((lj - 2) * w + li + 3) ]
+                    + 0 * sh[((lj - 1) * w + li - 3) ]  + 18 * sh[((lj - 1) * w + li - 2) ] +  64 * sh[((lj - 1) * w + li - 1) ] + 100 * sh[((lj - 1) * w + li) ] +  64 * sh[((lj - 1) * w + li + 1) ]  + 18 * sh[((lj - 1) * w + li + 2) ] + 0 * sh[((lj - 1) * w + li + 3) ]
+                    + 5 * sh[((lj) * w + li - 3) ]      + 32 * sh[((lj) * w + li - 2) ]     + 100 * sh[((lj) * w + li - 1) ]     + 100 * sh[((lj) * w + li) ]     + 100 * sh[((lj) * w + li + 1) ]      + 32 * sh[((lj) * w + li + 2) ]     + 5 * sh[((lj) * w + li + 3) ]
+                    + 0 * sh[((lj + 1) * w + li - 3) ]  + 18 * sh[((lj + 1) * w + li - 2) ] +  64 * sh[((lj + 1) * w + li - 1) ] + 100 * sh[((lj + 1) * w + li) ] +  64 * sh[((lj + 1) * w + li + 1) ]  + 18 * sh[((lj + 1) * w + li + 2) ] + 0 * sh[((lj + 1) * w + li + 3) ]
+                    + 0 * sh[((lj + 2) * w + li - 3) ]  +  5 * sh[((lj + 2) * w + li - 2) ] +  18 * sh[((lj + 2) * w + li - 1) ] +  32 * sh[((lj + 2) * w + li) ] +  18 * sh[((lj + 2) * w + li + 1) ]  +  5 * sh[((lj + 2) * w + li + 2) ] + 0 * sh[((lj + 2) * w + li + 3) ]
+                    + 0 * sh[((lj + 3) * w + li - 3) ]  +  0 * sh[((lj + 3) * w + li - 2) ] +   0 * sh[((lj + 3) * w + li - 1) ] +   5 * sh[((lj + 3) * w + li) ] +   0 * sh[((lj + 3) * w + li + 1) ]  +  0 * sh[((lj + 3) * w + li + 2) ] + 0 * sh[((lj + 3) * w + li + 3) ]
+                    ;
 
-    auto vr =     sh[ (lj-1)*w + li - 1 ] -     sh[ (lj+1)*w + li - 1 ]
-           + 2 * sh[ (lj-1)*w + li     ] - 2 * sh[ (lj+1)*w + li     ]
-           +     sh[ (lj-1)*w + li + 1 ] -     sh[ (lj+1)*w + li + 1 ];
 
-    auto res = hr*hr + vr*vr;
-    res = res > 65535 ? res = 65535 : res;
+    auto res = total/1068;
 
-    s[ j * cols + i ] = sqrtf( res );
+    s[j * cols + i] = res;
   }
 }
 
@@ -187,8 +189,8 @@ int main()
 
   
   // Version en 2 étapes.
-  grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
+  //grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
+  //gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
   
 
   
@@ -198,7 +200,7 @@ int main()
   
 
   // Version fusionnée.
-  //grayscale_sobel_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  grayscale_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
