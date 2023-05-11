@@ -39,8 +39,8 @@ int main() {
     cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED);
     auto rows = m_in.rows;
     auto cols = m_in.cols;
-    unsigned char * g = nullptr;
-    cv::Mat m_out( rows, cols, CV_8UC1, g );
+    unsigned char* out = nullptr;
+    cv::Mat m_out( rows, cols, CV_8UC1, out );
 
 
     // Allocation et copie des données sur le GPU
@@ -69,7 +69,7 @@ int main() {
     grayscale_boxblur_shared<<<grid0, block, block.x * block.y * sizeof(unsigned char), stream[1]>>>(s_d, g_d, cols, rows);
 
     // Copie du résultat final sur le CPU
-    unsigned char* out = nullptr;
+
     cudaMallocHost(&out, rows * cols);
     cudaMemcpyAsync(out, s_d, rows * cols, cudaMemcpyDeviceToHost, stream[1]);
 
