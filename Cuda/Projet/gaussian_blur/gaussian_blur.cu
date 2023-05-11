@@ -189,14 +189,14 @@ int main()
 
   
   // Version en 2 étapes.
-  //grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  //gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
+  grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
+  gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
   
 
   
   // Version en 2 étapes, Gaussian Blur avec mémoire shared.
-  grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
+  //grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
+  //gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
   
 
   // Version fusionnée.
