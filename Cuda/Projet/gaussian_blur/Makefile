@@ -14,7 +14,7 @@ gaussian_blur-cu: gaussian_blur.cu
 
 allstreams: gaussian_blur_streams streams
 
-gaussian_blur-streams: gaussian_blur_streams.cu
+gaussian_blur_streams: gaussian_blur_streams.cu
 	nvcc -o $@ $<  $(LDLIBS1)
 
 
