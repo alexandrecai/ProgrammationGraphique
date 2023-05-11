@@ -195,12 +195,12 @@ int main()
 
   
   // Version en 2 étapes, Gaussian Blur avec mémoire shared.
-  //grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  //gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
+  grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
+  gaussian_shared<<< grid1, block, block.x * block.y >>>( g_d, s_d, cols, rows );
   
 
   // Version fusionnée.
-  grayscale_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  //grayscale_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
