@@ -1,94 +1,74 @@
-/*
- * Streams.
- * Simple example to show how to overlap computation and communication.
- * In this case, the computation is negligible compared to the communication but
- * using the Nvidia visual profiler shows that communication from the host to the
- * device and from the device to the host may overlap.
- */
 #include <iostream>
-#include <vector>
+#include <opencv2/opencv.hpp>
 
-
-__global__ void vecadd( int * v0, int * v1, std::size_t size )
-{
-  auto tid = blockIdx.x * blockDim.x + threadIdx.x;
-  if( tid < size )
-  {
-    v0[ tid ] += v1[ tid ];
-  }
+__global__ void boxBlur(const cv::cuda::PtrStep<uchar3> src,
+                        cv::cuda::PtrStep<uchar3> dst,
+                        const int kernel_size) {
+    const int x = blockDim.x * blockIdx.x + threadIdx.x;
+    const int y = blockDim.y * blockIdx.y + threadIdx.y;
+    if (x < src.cols && y < src.rows) {
+        float3 sum = make_float3(0.f, 0.f, 0.f);
+        int count = 0;
+        for (int dy = -kernel_size; dy <= kernel_size; ++dy) {
+            for (int dx = -kernel_size; dx <= kernel_size; ++dx) {
+                const int nx = x + dx;
+                const int ny = y + dy;
+                if (nx >= 0 && nx < src.cols && ny >= 0 && ny < src.rows) {
+                    const uchar3 p = src(ny, nx);
+                    sum += make_float3(p.x, p.y, p.z);
+                    count += 1;
+                }
+            }
+        }
+        const float scale = 1.f / static_cast<float>(count);
+        const uchar3 avg = make_uchar3(sum.x * scale, sum.y * scale, sum.z * scale);
+        dst(y, x) = avg;
+    }
 }
 
+int main() {
+    cv::Mat img = cv::imread("../images/input.jpg", cv::IMREAD_COLOR);
+    cv::cuda::GpuMat d_src(img);
+    cv::cuda::GpuMat d_dst(d_src.size(), d_src.type());
 
-int main()
-{
-  std::size_t const size = 1000000;
-  std::size_t const sizeb = size * sizeof( int );
+    const dim3 block_size(32, 32);
+    const dim3 grid_size((d_src.cols - 1) / block_size.x + 1,
+                         (d_src.rows - 1) / block_size.y + 1);
+    const int kernel_size = 3;
 
-  int * v0 = nullptr;
-  int * v1 = nullptr;
-	
-  // Allocation on the host is done with the cudaMallocHost function.
-  // It is mandatory for streams since the memory needs to be pinned
-  // i.e. fixed in RAM and not swapable.
-  cudaMallocHost( &v0, sizeb );
-  cudaMallocHost( &v1, sizeb);
-  
-  for( std::size_t i = 0 ; i < size ; ++i )
-  {
-    v0[ i ] = v1[ i ] = i;
-  }
-  
-  int * v0_d = nullptr;
-  int * v1_d = nullptr;
+    // Streams declaration.
+    cudaStream_t streams[2];
 
-  cudaMalloc( &v0_d, sizeb );
-  cudaMalloc( &v1_d, sizeb );
-  
-  // Streams declaration.
-  cudaStream_t streams[ 2 ];
+    // Creation.
+    cudaStreamCreate(&streams[0]);
+    cudaStreamCreate(&streams[1]);
 
-  // Creation.
-  cudaStreamCreate( &streams[ 0 ] );
-  cudaStreamCreate( &streams[ 1 ] );
-  
-  // Input vectors are send by halves.
-  // The cudaMemcpyAsync function is used instead of the usual cudaMemcpy function
-  // since it takes the stream as its last parameter.
-  cudaMemcpyAsync( v0_d, v0, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 0 ] );
-  cudaMemcpyAsync( v1_d, v1, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 0 ] );
-  
-  cudaMemcpyAsync( v0_d+size/2, v0+size/2, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 1 ] );
-  cudaMemcpyAsync( v1_d+size/2, v1+size/2, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 1 ] );
-  
-  dim3 block( 1024 );
-  dim3 grid( (size - 1) / block.x * block.x + 1 );
-  
-  // One kernel is launched in each stream.
-  vecadd<<< 1, size/2, 0, streams[ 0 ] >>>( v0_d, v1_d, size/2 );
+    // Copying input image to device by halves.
+    cudaMemcpyAsync(d_src.ptr(), img.data, d_src.cols * d_src.rows * sizeof(uchar3) / 2,
+                    cudaMemcpyHostToDevice, streams[0]);
+    cudaMemcpyAsync(d_src.ptr(d_src.rows / 2), img.data + d_src.cols * d_src.rows * sizeof(uchar3) / 2,
+                    d_src.cols * d_src.rows * sizeof(uchar3) / 2, cudaMemcpyHostToDevice, streams[1]);
 
-  vecadd<<< 1, size/2, 0, streams[ 1 ] >>>( v0_d+size/2, v1_d+size/2, size/2 );
- 
-  // Sending back the resulting vector by halves.
-  cudaMemcpyAsync( v0, v0_d, size/2 * sizeof(int), cudaMemcpyDeviceToHost, streams[ 0 ] );
-  cudaMemcpyAsync( v0+size/2, v0_d+size/2, size/2 * sizeof(int), cudaMemcpyDeviceToHost, streams[ 1 ] );
-  
-  // Synchronize everything.
-  cudaDeviceSynchronize();
-  
-  // Destroy streams.
-  cudaStreamDestroy( streams[ 0 ] );
-  cudaStreamDestroy( streams[ 1 ] );
-     
-  for( std::size_t i = 0 ; i < size ; ++i )
-  {
-    std::cout << v0[ i ] << std::endl;
-  }
-  
-  cudaFree( v0_d );
-  cudaFree( v1_d );
- 
-  cudaFreeHost( v0 );
-  cudaFreeHost( v1 );
- 
-  return 0;
+    // Launching one kernel in each stream.
+    boxBlur<<<grid_size, block_size, 0, streams[0]>>>(d_src, d_dst, kernel_size);
+    boxBlur<<<grid_size, block_size, 0, streams[1]>>>(d_src.ptr(d_src.rows / 2), d_dst.ptr(d_src.rows / 2), kernel_size);
+
+    // Copying output image from device by halves.
+    cudaMemcpyAsync(img.data, d_dst.ptr(), d_src.cols * d_src.rows * sizeof(uchar3) / 2,
+                    cudaMemcpyDeviceToHost, streams[0]);
+    cudaMemcpyAsync(img.data + d_src.cols * d_src.rows * sizeof(uchar3) / 2, d_dst.ptr(d_src.rows / 2),
+                    d_src.cols * d_src.rows *
+                            sizeof(uchar3) / 2, cudaMemcpyDeviceToHost, streams[1]);
+
+// Synchronizing streams.
+    cudaStreamSynchronize(streams[0]);
+    cudaStreamSynchronize(streams[1]);
+
+// Destroying streams.
+    cudaStreamDestroy(streams[0]);
+    cudaStreamDestroy(streams[1]);
+
+    cv::imwrite("out.jpg", img);
+
+    return 0;
 }
