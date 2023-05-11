@@ -10,7 +10,7 @@ int main() {
 
     ilGenImages(1, &image);
     ilBindImage(image);
-    ilLoadImage("../images/in.jpg");
+    ilLoadImage("../images/mountain.jpg");
 
     int width, height, bpp, format;
 
