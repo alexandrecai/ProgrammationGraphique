@@ -12,6 +12,16 @@ gaussian_blur-cu: gaussian_blur.cu
 	nvcc -o $@ $<  $(LDLIBS1)
 
 
+allstreams: gaussian_blur_streams streams
+
+gaussian_blur-stream: gaussian_blur_streams.cu
+	nvcc -o $@ $<  $(LDLIBS1)
+
+
+streams: streams.cu
+	nvcc -o $@ $<  $(LDLIBS1)
+
+
 .PHONY: clean
 
 clean:
