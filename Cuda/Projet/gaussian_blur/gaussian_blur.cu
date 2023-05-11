@@ -72,13 +72,13 @@ __global__ void gaussian_shared( unsigned char * g, unsigned char * s, std::size
   if( i < cols -3 && j < rows-3 && li > 3 && li < (w-3) && lj > 3 && lj < (h-3) )
   {
     auto total =   
-                      0 * g[((lj - 3) * w + li - 3) ]  +  0 * g[((lj - 3) * w + li - 2) ] +   0 * g[((lj - 3) * w + li - 1) ] +   5 * g[((lj - 3) * w + li) ] +   0 * g[((lj - 3) * w + li + 1) ]  +  0 * g[((lj - 3) * w + li + 2) ] + 0 * g[((lj - 3) * w + li + 3) ]
-                    + 0 * g[((lj - 2) * w + li - 3) ]  +  5 * g[((lj - 2) * w + li - 2) ] +  18 * g[((lj - 2) * w + li - 1) ] +  32 * g[((lj - 2) * w + li) ] +  18 * g[((lj - 2) * w + li + 1) ]  +  5 * g[((lj - 2) * w + li + 2) ] + 0 * g[((lj - 2) * w + li + 3) ]
-                    + 0 * g[((lj - 1) * w + li - 3) ]  + 18 * g[((lj - 1) * w + li - 2) ] +  64 * g[((lj - 1) * w + li - 1) ] + 100 * g[((lj - 1) * w + li) ] +  64 * g[((lj - 1) * w + li + 1) ]  + 18 * g[((lj - 1) * w + li + 2) ] + 0 * g[((lj - 1) * w + li + 3) ]
-                    + 5 * g[((lj) * w + li - 3) ]      + 32 * g[((lj) * w + li - 2) ]     + 100 * g[((lj) * w + li - 1) ]     + 100 * g[((lj) * w + li) ]     + 100 * g[((lj) * w + li + 1) ]      + 32 * g[((lj) * w + li + 2) ]     + 5 * g[((lj) * w + li + 3) ]
-                    + 0 * g[((lj + 1) * w + li - 3) ]  + 18 * g[((lj + 1) * w + li - 2) ] +  64 * g[((lj + 1) * w + li - 1) ] + 100 * g[((lj + 1) * w + li) ] +  64 * g[((lj + 1) * w + li + 1) ]  + 18 * g[((lj + 1) * w + li + 2) ] + 0 * g[((lj + 1) * w + li + 3) ]
-                    + 0 * g[((lj + 2) * w + li - 3) ]  +  5 * g[((lj + 2) * w + li - 2) ] +  18 * g[((lj + 2) * w + li - 1) ] +  32 * g[((lj + 2) * w + li) ] +  18 * g[((lj + 2) * w + li + 1) ]  +  5 * g[((lj + 2) * w + li + 2) ] + 0 * g[((lj + 2) * w + li + 3) ]
-                    + 0 * g[((lj + 3) * w + li - 3) ]  +  0 * g[((lj + 3) * w + li - 2) ] +   0 * g[((lj + 3) * w + li - 1) ] +   5 * g[((lj + 3) * w + li) ] +   0 * g[((lj + 3) * w + li + 1) ]  +  0 * g[((lj + 3) * w + li + 2) ] + 0 * g[((lj + 3) * w + li + 3) ]
+                      0 * sh[((lj - 3) * w + li - 3) ]  +  0 * sh[((lj - 3) * w + li - 2) ] +   0 * sh[((lj - 3) * w + li - 1) ] +   5 * sh[((lj - 3) * w + li) ] +   0 * sh[((lj - 3) * w + li + 1) ]  +  0 * sh[((lj - 3) * w + li + 2) ] + 0 * sh[((lj - 3) * w + li + 3) ]
+                    + 0 * sh[((lj - 2) * w + li - 3) ]  +  5 * sh[((lj - 2) * w + li - 2) ] +  18 * sh[((lj - 2) * w + li - 1) ] +  32 * sh[((lj - 2) * w + li) ] +  18 * sh[((lj - 2) * w + li + 1) ]  +  5 * sh[((lj - 2) * w + li + 2) ] + 0 * sh[((lj - 2) * w + li + 3) ]
+                    + 0 * sh[((lj - 1) * w + li - 3) ]  + 18 * sh[((lj - 1) * w + li - 2) ] +  64 * sh[((lj - 1) * w + li - 1) ] + 100 * sh[((lj - 1) * w + li) ] +  64 * sh[((lj - 1) * w + li + 1) ]  + 18 * sh[((lj - 1) * w + li + 2) ] + 0 * sh[((lj - 1) * w + li + 3) ]
+                    + 5 * sh[((lj) * w + li - 3) ]      + 32 * sh[((lj) * w + li - 2) ]     + 100 * sh[((lj) * w + li - 1) ]     + 100 * sh[((lj) * w + li) ]     + 100 * sh[((lj) * w + li + 1) ]      + 32 * sh[((lj) * w + li + 2) ]     + 5 * sh[((lj) * w + li + 3) ]
+                    + 0 * sh[((lj + 1) * w + li - 3) ]  + 18 * sh[((lj + 1) * w + li - 2) ] +  64 * sh[((lj + 1) * w + li - 1) ] + 100 * sh[((lj + 1) * w + li) ] +  64 * sh[((lj + 1) * w + li + 1) ]  + 18 * sh[((lj + 1) * w + li + 2) ] + 0 * sh[((lj + 1) * w + li + 3) ]
+                    + 0 * sh[((lj + 2) * w + li - 3) ]  +  5 * sh[((lj + 2) * w + li - 2) ] +  18 * sh[((lj + 2) * w + li - 1) ] +  32 * sh[((lj + 2) * w + li) ] +  18 * sh[((lj + 2) * w + li + 1) ]  +  5 * sh[((lj + 2) * w + li + 2) ] + 0 * sh[((lj + 2) * w + li + 3) ]
+                    + 0 * sh[((lj + 3) * w + li - 3) ]  +  0 * sh[((lj + 3) * w + li - 2) ] +   0 * sh[((lj + 3) * w + li - 1) ] +   5 * sh[((lj + 3) * w + li) ] +   0 * sh[((lj + 3) * w + li + 1) ]  +  0 * sh[((lj + 3) * w + li + 2) ] + 0 * sh[((lj + 3) * w + li + 3) ]
                     ;
 
 
@@ -189,8 +189,8 @@ int main()
 
   
   // Version en 2 étapes.
-  //grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
-  //gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
+  grayscale<<< grid0, block >>>( rgb_d, g_d, cols, rows );
+  gaussian<<< grid0, block >>>( g_d, s_d, cols, rows );
   
 
   
@@ -200,7 +200,7 @@ int main()
   
 
   // Version fusionnée.
-  grayscale_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
+  //grayscale_gaussian_shared<<< grid1, block, block.x * block.y >>>( rgb_d, s_d, cols, rows );
 
   cudaEventRecord( stop );
   
