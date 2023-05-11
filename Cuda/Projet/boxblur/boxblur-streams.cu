@@ -40,6 +40,8 @@ int main() {
     auto rows = m_in.rows;
     auto cols = m_in.cols;
 
+
+
     // Allocation et copie des données sur le GPU
     unsigned char* rgb_d = nullptr;
     unsigned char* g_d = nullptr;
@@ -70,13 +72,14 @@ int main() {
     cudaMallocHost(&out, rows * cols);
     cudaMemcpyAsync(out, s_d, rows * cols, cudaMemcpyDeviceToHost, stream[1]);
 
+
     // Affichage du temps d'exécution
     cudaDeviceSynchronize();
     auto start = std::chrono::high_resolution_clock::now();
     cudaDeviceSynchronize();
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Execution time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
-
+    cv::imwrite( "out.jpg", out );
     // Libération de la mémoire
     cudaFree(rgb_d);
     cudaFree(g_d);
