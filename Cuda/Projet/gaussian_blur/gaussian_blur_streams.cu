@@ -4,9 +4,9 @@
 #include <string>
 #include <chrono>
 
-__global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
-    auto i = blockIdx.x * (blockDim.x-5) + threadIdx.x;
-    auto j = blockIdx.y * (blockDim.y-5) + threadIdx.y;
+__global__ void grayscale_gaussian_blur_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
+    auto i = blockIdx.x * (blockDim.x-7) + threadIdx.x;
+    auto j = blockIdx.y * (blockDim.y-7) + threadIdx.y;
 
     auto li = threadIdx.x;
     auto lj = threadIdx.y;
@@ -30,19 +30,23 @@ __global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsign
      */
     __syncthreads();
 
-    if( i < cols -2 && j < rows-2 && li > 2 && li < (w-2) && lj > 2 && lj < (h-2) )
-    {
-        auto res =       sh[((lj - 2) * w + li - 2) ] * 0 + sh[((lj - 2) * w + li -1) ] * 0 +  sh[((lj - 2) * w + li) ]* -1 + sh[((lj - 2) * w + li +1 ) ] * 0 + sh[((lj - 2) * w + li + 2) ] *0
-                         +  sh[((lj - 1) * w + li - 2) ] * 0 + sh[((lj - 1) * w + li -1) ] * -1 +  sh[((lj - 1) * w + li) ]* -2 + sh[((lj - 1) * w + li +1 ) ] * -1 + sh[((lj - 1) * w + li + 2) ] *0
-                         +     sh[((lj) * w + li - 2) ] * -1 + sh[((lj) * w + li -1) ] * -2 +  sh[((lj) * w + li) ]* 16 + sh[((lj) * w + li +1 ) ] * -2 + sh[((lj) * w + li + 2) ] * -1
-                         +    sh[((lj + 1) * w + li - 2) ] * 0 + sh[((lj +1) * w + li -1) ] * -1 +  sh[((lj + 1) * w + li) ]* -2 + sh[((lj + 1) * w + li +1 ) ] * -1 + sh[((lj + 1) * w + li + 2) ] *0
-                         +    sh[((lj + 2) * w + li - 2) ] * 0 + sh[((lj + 2) * w + li -1) ] * 0 +  sh[((lj + 2) * w + li) ]* -1 + sh[((lj + 2) * w + li +1 ) ] * 0 + sh[((lj + 2) * w + li + 2) ] *0;
+  if( i < cols -3 && j < rows-3 && li > 3 && li < (w-3) && lj > 3 && lj < (h-3) )
+  {
+    auto total =   
+                      0 * sh[((lj - 3) * w + li - 3) ]  +  0 * sh[((lj - 3) * w + li - 2) ] +   0 * sh[((lj - 3) * w + li - 1) ] +   5 * sh[((lj - 3) * w + li) ] +   0 * sh[((lj - 3) * w + li + 1) ]  +  0 * sh[((lj - 3) * w + li + 2) ] + 0 * sh[((lj - 3) * w + li + 3) ]
+                    + 0 * sh[((lj - 2) * w + li - 3) ]  +  5 * sh[((lj - 2) * w + li - 2) ] +  18 * sh[((lj - 2) * w + li - 1) ] +  32 * sh[((lj - 2) * w + li) ] +  18 * sh[((lj - 2) * w + li + 1) ]  +  5 * sh[((lj - 2) * w + li + 2) ] + 0 * sh[((lj - 2) * w + li + 3) ]
+                    + 0 * sh[((lj - 1) * w + li - 3) ]  + 18 * sh[((lj - 1) * w + li - 2) ] +  64 * sh[((lj - 1) * w + li - 1) ] + 100 * sh[((lj - 1) * w + li) ] +  64 * sh[((lj - 1) * w + li + 1) ]  + 18 * sh[((lj - 1) * w + li + 2) ] + 0 * sh[((lj - 1) * w + li + 3) ]
+                    + 5 * sh[((lj) * w + li - 3) ]      + 32 * sh[((lj) * w + li - 2) ]     + 100 * sh[((lj) * w + li - 1) ]     + 100 * sh[((lj) * w + li) ]     + 100 * sh[((lj) * w + li + 1) ]      + 32 * sh[((lj) * w + li + 2) ]     + 5 * sh[((lj) * w + li + 3) ]
+                    + 0 * sh[((lj + 1) * w + li - 3) ]  + 18 * sh[((lj + 1) * w + li - 2) ] +  64 * sh[((lj + 1) * w + li - 1) ] + 100 * sh[((lj + 1) * w + li) ] +  64 * sh[((lj + 1) * w + li + 1) ]  + 18 * sh[((lj + 1) * w + li + 2) ] + 0 * sh[((lj + 1) * w + li + 3) ]
+                    + 0 * sh[((lj + 2) * w + li - 3) ]  +  5 * sh[((lj + 2) * w + li - 2) ] +  18 * sh[((lj + 2) * w + li - 1) ] +  32 * sh[((lj + 2) * w + li) ] +  18 * sh[((lj + 2) * w + li + 1) ]  +  5 * sh[((lj + 2) * w + li + 2) ] + 0 * sh[((lj + 2) * w + li + 3) ]
+                    + 0 * sh[((lj + 3) * w + li - 3) ]  +  0 * sh[((lj + 3) * w + li - 2) ] +   0 * sh[((lj + 3) * w + li - 1) ] +   5 * sh[((lj + 3) * w + li) ] +   0 * sh[((lj + 3) * w + li + 1) ]  +  0 * sh[((lj + 3) * w + li + 2) ] + 0 * sh[((lj + 3) * w + li + 3) ]
+                    ;
 
-        res = res > 255 ? 255 : res;
-        res = res < 0 ? 0 : res;
 
-        s[j * cols + i] = res;
-    }
+    auto res = total/1068;
+
+    s[j * cols + i] = res;
+  }
 }
 
 int main() {
@@ -64,8 +68,7 @@ int main() {
 
     // Définition des paramètres de grille et de bloc pour les kernels
     dim3 block(64, 8);
-    //dim3 grid0((cols - 1) / block.x + 1, (rows - 1) / block.y + 1);
-    dim3 grid1((cols - 1) / (block.x - 5) + 1, (rows - 1) / (block.y - 5) + 1);
+    dim3 grid1((cols - 1) / (block.x - 7) + 1, (rows - 1) / (block.y - 7) + 1);
 
     // Création des streams CUDA
     cudaStream_t stream[2];
@@ -73,17 +76,17 @@ int main() {
     cudaStreamCreate(&stream[1]);
 
     // Appel du premier kernel
-    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+2);
+    grayscale_gaussian_blur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+3);
 
     // Appel du deuxième kernel
-    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+(((rows*cols*3)/2)-cols*3*3), g_d, cols, rows/2+3);
+    grayscale_gaussian_blur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+(((rows*cols*3)/2)-cols*3*4), g_d, cols, rows/2+4);
 
     // Copie du résultat final sur le CPU
     unsigned char* out = nullptr;
     cudaMallocHost(&out, rows * cols);
 
     cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
-    cudaMemcpyAsync(out+(rows * cols)/2, g_d+cols*3, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
+    cudaMemcpyAsync(out+(rows * cols)/2, g_d+cols*4, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
 
 
     cv::Mat m_out( rows, cols, CV_8UC1, out );
