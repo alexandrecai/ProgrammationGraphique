@@ -74,7 +74,7 @@ int main() {
     cudaMallocHost(&out, rows * cols);
 
     cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
-    cudaMemcpyAsync(out+((rows * cols)/2 - cols), g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
+    cudaMemcpyAsync(out+((rows * cols)/2 - cols*30), g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
 
 
     cv::Mat m_out( rows, cols, CV_8UC1, out );
