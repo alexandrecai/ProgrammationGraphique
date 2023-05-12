@@ -54,7 +54,7 @@ int main() {
     // Définition des paramètres de grille et de bloc pour les kernels
     dim3 block(64, 8);
     //dim3 grid0((cols - 1) / block.x + 1, (rows - 1) / block.y + 1);
-    dim3 grid1((cols - 1) / (block.x - 2) + 1, (rows) / (block.y - 2) + 1);
+    dim3 grid1((cols - 1) / (block.x - 2) + 1, (rows - 1) / (block.y - 2) + 1);
 
     // Création des streams CUDA
     cudaStream_t stream[2];
@@ -65,14 +65,14 @@ int main() {
     grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+1);
 
     // Appel du deuxième kernel
-    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+((rows*cols*3)/2), g_d, cols, rows/2);
+    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+((rows*cols*3)/2)-cols, g_d, cols, rows/2+1);
 
     // Copie du résultat final sur le CPU
     unsigned char* out = nullptr;
     cudaMallocHost(&out, rows * cols);
 
     cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
-    cudaMemcpyAsync(out+(rows * cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
+    cudaMemcpyAsync(out+(rows * cols)/2, g_d+cols, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
 
 
     cv::Mat m_out( rows, cols, CV_8UC1, out );
