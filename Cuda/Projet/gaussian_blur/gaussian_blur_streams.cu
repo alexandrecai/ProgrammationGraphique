@@ -1,94 +1,107 @@
-/*
- * Streams.
- * Simple example to show how to overlap computation and communication.
- * In this case, the computation is negligible compared to the communication but
- * using the Nvidia visual profiler shows that communication from the host to the
- * device and from the device to the host may overlap.
- */
+#include <cuda_runtime.h>
+#include <opencv2/opencv.hpp>
 #include <iostream>
-#include <vector>
+#include <string>
+#include <chrono>
 
+__global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
+    auto i = blockIdx.x * (blockDim.x-5) + threadIdx.x;
+    auto j = blockIdx.y * (blockDim.y-5) + threadIdx.y;
 
-__global__ void vecadd( int * v0, int * v1, std::size_t size )
-{
-  auto tid = blockIdx.x * blockDim.x + threadIdx.x;
-  if( tid < size )
-  {
-    v0[ tid ] += v1[ tid ];
-  }
+    auto li = threadIdx.x;
+    auto lj = threadIdx.y;
+
+    auto w = blockDim.x;
+    auto h = blockDim.y;
+
+    extern __shared__ unsigned char sh[];
+
+    if( i < cols && j < rows ) {
+        sh[ lj * w + li ] = (
+                307 * rgb[ 3 * ( j * cols + i ) ]
+                + 604 * rgb[ 3 * ( j * cols + i ) + 1 ]
+                + 113 * rgb[  3 * ( j * cols + i ) + 2 ]
+        ) >> 10;
+    }
+
+    /**
+     * Il faut synchroniser tous les warps (threads) du bloc pour être certain que le niveau de gris est calculé
+     * par tous les threads du bloc avant de pouvoir accéder aux données des pixels voisins.
+     */
+    __syncthreads();
+
+    if( i < cols -2 && j < rows-2 && li > 2 && li < (w-2) && lj > 2 && lj < (h-2) )
+    {
+        auto res =       sh[((lj - 2) * w + li - 2) ] * 0 + sh[((lj - 2) * w + li -1) ] * 0 +  sh[((lj - 2) * w + li) ]* -1 + sh[((lj - 2) * w + li +1 ) ] * 0 + sh[((lj - 2) * w + li + 2) ] *0
+                         +  sh[((lj - 1) * w + li - 2) ] * 0 + sh[((lj - 1) * w + li -1) ] * -1 +  sh[((lj - 1) * w + li) ]* -2 + sh[((lj - 1) * w + li +1 ) ] * -1 + sh[((lj - 1) * w + li + 2) ] *0
+                         +     sh[((lj) * w + li - 2) ] * -1 + sh[((lj) * w + li -1) ] * -2 +  sh[((lj) * w + li) ]* 16 + sh[((lj) * w + li +1 ) ] * -2 + sh[((lj) * w + li + 2) ] * -1
+                         +    sh[((lj + 1) * w + li - 2) ] * 0 + sh[((lj +1) * w + li -1) ] * -1 +  sh[((lj + 1) * w + li) ]* -2 + sh[((lj + 1) * w + li +1 ) ] * -1 + sh[((lj + 1) * w + li + 2) ] *0
+                         +    sh[((lj + 2) * w + li - 2) ] * 0 + sh[((lj + 2) * w + li -1) ] * 0 +  sh[((lj + 2) * w + li) ]* -1 + sh[((lj + 2) * w + li +1 ) ] * 0 + sh[((lj + 2) * w + li + 2) ] *0;
+
+        res = res > 255 ? 255 : res;
+        res = res < 0 ? 0 : res;
+
+        s[j * cols + i] = res;
+    }
 }
 
+int main() {
+    // Lecture de l'image d'entrée
+    cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED);
+    auto rows = m_in.rows;
+    auto cols = m_in.cols;
+    auto start = std::chrono::high_resolution_clock::now();
 
-int main()
-{
-  std::size_t const size = 1000000;
-  std::size_t const sizeb = size * sizeof( int );
 
-  int * v0 = nullptr;
-  int * v1 = nullptr;
-	
-  // Allocation on the host is done with the cudaMallocHost function.
-  // It is mandatory for streams since the memory needs to be pinned
-  // i.e. fixed in RAM and not swapable.
-  cudaMallocHost( &v0, sizeb );
-  cudaMallocHost( &v1, sizeb);
-  
-  for( std::size_t i = 0 ; i < size ; ++i )
-  {
-    v0[ i ] = v1[ i ] = i;
-  }
-  
-  int * v0_d = nullptr;
-  int * v1_d = nullptr;
+    // Allocation et copie des données sur le GPU
+    unsigned char* rgb_d = nullptr;
+    unsigned char* g_d = nullptr;
+    unsigned char* s_d = nullptr;
+    cudaMalloc(&rgb_d, 3 * rows * cols);
+    cudaMalloc(&g_d, rows * cols);
+    cudaMalloc(&s_d, rows * cols);
+    cudaMemcpy(rgb_d, m_in.data, 3 * rows * cols, cudaMemcpyHostToDevice);
 
-  cudaMalloc( &v0_d, sizeb );
-  cudaMalloc( &v1_d, sizeb );
-  
-  // Streams declaration.
-  cudaStream_t streams[ 2 ];
+    // Définition des paramètres de grille et de bloc pour les kernels
+    dim3 block(64, 8);
+    //dim3 grid0((cols - 1) / block.x + 1, (rows - 1) / block.y + 1);
+    dim3 grid1((cols - 1) / (block.x - 5) + 1, (rows - 1) / (block.y - 5) + 1);
 
-  // Creation.
-  cudaStreamCreate( &streams[ 0 ] );
-  cudaStreamCreate( &streams[ 1 ] );
-  
-  // Input vectors are send by halves.
-  // The cudaMemcpyAsync function is used instead of the usual cudaMemcpy function
-  // since it takes the stream as its last parameter.
-  cudaMemcpyAsync( v0_d, v0, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 0 ] );
-  cudaMemcpyAsync( v1_d, v1, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 0 ] );
-  
-  cudaMemcpyAsync( v0_d+size/2, v0+size/2, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 1 ] );
-  cudaMemcpyAsync( v1_d+size/2, v1+size/2, size/2 * sizeof(int), cudaMemcpyHostToDevice, streams[ 1 ] );
-  
-  dim3 block( 1024 );
-  dim3 grid( (size - 1) / block.x * block.x + 1 );
-  
-  // One kernel is launched in each stream.
-  vecadd<<< 1, size/2, 0, streams[ 0 ] >>>( v0_d, v1_d, size/2 );
+    // Création des streams CUDA
+    cudaStream_t stream[2];
+    cudaStreamCreate(&stream[0]);
+    cudaStreamCreate(&stream[1]);
 
-  vecadd<<< 1, size/2, 0, streams[ 1 ] >>>( v0_d+size/2, v1_d+size/2, size/2 );
- 
-  // Sending back the resulting vector by halves.
-  cudaMemcpyAsync( v0, v0_d, size/2 * sizeof(int), cudaMemcpyDeviceToHost, streams[ 0 ] );
-  cudaMemcpyAsync( v0+size/2, v0_d+size/2, size/2 * sizeof(int), cudaMemcpyDeviceToHost, streams[ 1 ] );
-  
-  // Synchronize everything.
-  cudaDeviceSynchronize();
-  
-  // Destroy streams.
-  cudaStreamDestroy( streams[ 0 ] );
-  cudaStreamDestroy( streams[ 1 ] );
-     
-  for( std::size_t i = 0 ; i < size ; ++i )
-  {
-    std::cout << v0[ i ] << std::endl;
-  }
-  
-  cudaFree( v0_d );
-  cudaFree( v1_d );
- 
-  cudaFreeHost( v0 );
-  cudaFreeHost( v1 );
- 
-  return 0;
+    // Appel du premier kernel
+    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+2);
+
+    // Appel du deuxième kernel
+    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+(((rows*cols*3)/2)-cols*3*3), g_d, cols, rows/2+3);
+
+    // Copie du résultat final sur le CPU
+    unsigned char* out = nullptr;
+    cudaMallocHost(&out, rows * cols);
+
+    cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
+    cudaMemcpyAsync(out+(rows * cols)/2, g_d+cols*3, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
+
+
+    cv::Mat m_out( rows, cols, CV_8UC1, out );
+
+    // Affichage du temps d'exécution
+    cudaDeviceSynchronize();
+
+    //cudaDeviceSynchronize();
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << "Execution time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
+    cv::imwrite( "out.jpg", m_out );
+    // Libération de la mémoire
+    cudaFree(rgb_d);
+    cudaFree(g_d);
+    cudaFree(s_d);
+    cudaFreeHost(out);
+    cudaStreamDestroy(stream[0]);
+    cudaStreamDestroy(stream[1]);
+
+    return 0;
 }
