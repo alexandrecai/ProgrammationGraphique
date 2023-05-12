@@ -47,7 +47,7 @@ __global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsign
 
 int main() {
     // Lecture de l'image d'entrée
-    cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED);
+    cv::Mat m_in = cv::imread("../images/mountain.jpg", cv::IMREAD_UNCHANGED);
     auto rows = m_in.rows;
     auto cols = m_in.cols;
     auto start = std::chrono::high_resolution_clock::now();
