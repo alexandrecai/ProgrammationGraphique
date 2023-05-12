@@ -73,7 +73,7 @@ int main() {
     cudaStreamCreate(&stream[1]);
 
     // Appel du premier kernel
-    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+2);
+    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+3);
 
     // Appel du deuxième kernel
     grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+(((rows*cols*3)/2)-cols*3*2), g_d, cols, rows/2+2);
