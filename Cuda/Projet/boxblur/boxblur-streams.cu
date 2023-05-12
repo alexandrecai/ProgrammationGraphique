@@ -64,7 +64,7 @@ int main() {
     std::size_t const sizeb = (cols*rows) * sizeof( int );
 
     // Appel du premier kernel
-    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+1);
+    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+2);
 
     // Appel du deuxième kernel
     grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+((rows*cols*3)/2)-3*cols, g_d, cols, rows/2+1);
