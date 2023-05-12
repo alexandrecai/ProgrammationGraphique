@@ -52,8 +52,8 @@ int main() {
     cudaMemcpy(rgb_d, m_in.data, 3 * rows * cols, cudaMemcpyHostToDevice);
 
     // Définition des paramètres de grille et de bloc pour les kernels
-    dim3 block(64, 8);
-    dim3 grid0((cols - 1) / block.x + 1, (rows - 1) / block.y + 1);
+    dim3 block(32, 4);
+    //dim3 grid0((cols - 1) / block.x + 1, (rows - 1) / block.y + 1);
     dim3 grid1((cols - 1) / (block.x - 2) + 1, (rows - 1) / (block.y - 2) + 1);
 
     // Création des streams CUDA
@@ -74,7 +74,7 @@ int main() {
     cudaMallocHost(&out, rows * cols);
 
     cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
-    cudaMemcpyAsync(out+((rows * cols)/2 - cols*30), g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
+    cudaMemcpyAsync(out+(rows * cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
 
 
     cv::Mat m_out( rows, cols, CV_8UC1, out );
@@ -82,7 +82,7 @@ int main() {
     // Affichage du temps d'exécution
     cudaDeviceSynchronize();
 
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Execution time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
     cv::imwrite( "out.jpg", m_out );
