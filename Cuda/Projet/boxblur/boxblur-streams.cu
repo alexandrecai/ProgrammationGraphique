@@ -62,10 +62,10 @@ int main() {
     cudaStreamCreate(&stream[1]);
 
     // Appel du premier kernel
-    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+1);
+    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+4) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+1);
 
     // Appel du deuxième kernel
-    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+((rows*cols*3)/2), g_d, cols, rows/2);
+    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+4) * sizeof(unsigned char), stream[1]>>>(rgb_d+((rows*cols*3)/2), g_d, cols, rows/2);
 
     // Copie du résultat final sur le CPU
     unsigned char* out = nullptr;
