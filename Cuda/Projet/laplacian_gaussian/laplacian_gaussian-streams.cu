@@ -5,8 +5,8 @@
 #include <chrono>
 
 __global__ void grayscale_laplacian_gaussian_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
-    auto i = blockIdx.x * (blockDim.x-5) + threadIdx.x;
-    auto j = blockIdx.y * (blockDim.y-5) + threadIdx.y;
+    auto i = blockIdx.x * (blockDim.x-4) + threadIdx.x;
+    auto j = blockIdx.y * (blockDim.y-4) + threadIdx.y;
 
     auto li = threadIdx.x;
     auto lj = threadIdx.y;
@@ -73,7 +73,7 @@ int main() {
     cudaStreamCreate(&stream[1]);
 
     // Appel du premier kernel
-    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+3);
+    grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+2);
 
     // Appel du deuxième kernel
     grayscale_laplacian_gaussian_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+(((rows*cols*3)/2)-cols*3*2), g_d, cols, rows/2+2);
