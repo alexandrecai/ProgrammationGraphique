@@ -64,7 +64,7 @@ int main() {
     std::size_t const sizeb = (cols*rows) * sizeof( int );
 
     // Appel du premier kernel
-    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+2);
+    grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+1);
 
     // Appel du deuxième kernel
     grayscale_boxblur_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+((rows*cols*3)/2)-3*cols, g_d, cols, rows/2+1);
@@ -75,7 +75,7 @@ int main() {
     //cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
     cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
 
-    cudaMemcpyAsync(out+(rows * cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
+    cudaMemcpyAsync(out+((rows * cols)-cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
     //cudaMemcpyAsync(out+(rows * cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
     //cudaMemcpyAsync(out+(rows * cols)/2, s_d+(rows * cols)/2, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
 
