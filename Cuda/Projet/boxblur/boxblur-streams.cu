@@ -67,13 +67,14 @@ int main() {
     grayscale_boxblur_shared<<<grid1, block, block.x * block.y * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2);
 
     // Appel du deuxième kernel
-    grayscale_boxblur_shared<<<grid1, block, block.x * block.y * sizeof(unsigned char), stream[1]>>>(rgb_d+(rows*cols)/2, g_d+sizeb/2, cols, rows/2);
+    grayscale_boxblur_shared<<<grid1, block, block.x * block.y * sizeof(unsigned char), stream[1]>>>(rgb_d+(rows*cols)/2, g_d, cols, rows/2);
 
     // Copie du résultat final sur le CPU
     unsigned char* out = nullptr;
     cudaMallocHost(&out, rows * cols);
     //cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
     cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
+
     cudaMemcpyAsync(out+(rows * cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
     //cudaMemcpyAsync(out+(rows * cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
     //cudaMemcpyAsync(out+(rows * cols)/2, s_d+(rows * cols)/2, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
