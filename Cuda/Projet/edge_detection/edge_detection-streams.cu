@@ -4,28 +4,31 @@
 #include <string>
 #include <chrono>
 
-__global__ void edge_detection_shared( unsigned char * g, unsigned char * s, std::size_t cols, std::size_t rows )
-{
+__global__ void grayscale_edge_detection_shared( unsigned char * rgb, unsigned char * s, std::size_t cols, std::size_t rows ) {
+    auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
+    auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
+
     auto li = threadIdx.x;
     auto lj = threadIdx.y;
 
     auto w = blockDim.x;
     auto h = blockDim.y;
 
-    auto i = blockIdx.x * (blockDim.x-2) + threadIdx.x;
-    auto j = blockIdx.y * (blockDim.y-2) + threadIdx.y;
-
     extern __shared__ unsigned char sh[];
 
-    if( i < cols && j < rows )
-    {
-        sh[ lj * w + li ] = g[ j * cols + i ];
+    if( i < cols && j < rows ) {
+        sh[ lj * w + li ] = (
+                307 * rgb[ 3 * ( j * cols + i ) ]
+                + 604 * rgb[ 3 * ( j * cols + i ) + 1 ]
+                + 113 * rgb[  3 * ( j * cols + i ) + 2 ]
+        ) >> 10;
     }
 
     __syncthreads();
 
     if( i < cols -1 && j < rows-1 && li > 0 && li < (w-1) && lj > 0 && lj < (h-1) )
     {
+
         auto contour = -1;
         auto middle = 8;
 
@@ -37,7 +40,6 @@ __global__ void edge_detection_shared( unsigned char * g, unsigned char * s, std
         res = res < 0 ? 0 : res;
 
         s[j * cols + i] = res;
-
     }
 }
 
@@ -69,10 +71,10 @@ int main() {
     cudaStreamCreate(&stream[1]);
 
     // Appel du premier kernel
-    edge_detection_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+1);
+    grayscale_edge_detection_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows/2+1);
 
     // Appel du deuxième kernel
-    edge_detection_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+(((rows*cols*3)/2)-cols*3), g_d, cols, rows/2+1);
+    grayscale_edge_detection_shared<<<grid1, block, block.x * (block.y+2) * sizeof(unsigned char), stream[1]>>>(rgb_d+(((rows*cols*3)/2)-cols*3), g_d, cols, rows/2+1);
 
     // Copie du résultat final sur le CPU
     unsigned char* out = nullptr;
