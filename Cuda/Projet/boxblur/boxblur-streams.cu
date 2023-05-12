@@ -52,7 +52,7 @@ int main() {
     cudaMemcpy(rgb_d, m_in.data, 3 * rows * cols, cudaMemcpyHostToDevice);
 
     // Définition des paramètres de grille et de bloc pour les kernels
-    dim3 block(128, 16);
+    dim3 block(64, 8);
     //dim3 grid0((cols - 1) / block.x + 1, (rows - 1) / block.y + 1);
     dim3 grid1((cols - 1) / (block.x - 2) + 1, (rows - 1) / (block.y - 2) + 1);
 
