@@ -11,6 +11,9 @@ gaussian_blur: gaussian_blur.cpp
 gaussian_blur-cu: gaussian_blur.cu
 	nvcc -o $@ $<  $(LDLIBS1)
 
+box: boxblur-streams.cu
+	nvcc -o $@ $<  $(LDLIBS1)
+
 
 allstreams: gaussian_blur_streams streams
 
