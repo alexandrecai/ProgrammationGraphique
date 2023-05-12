@@ -45,7 +45,7 @@ __global__ void grayscale_edge_detection_shared( unsigned char * rgb, unsigned c
 
 int main() {
     // Lecture de l'image d'entrée
-    cv::Mat m_in = cv::imread("../images/carrot.jpg", cv::IMREAD_UNCHANGED);
+    cv::Mat m_in = cv::imread("../images/mountain.jpg", cv::IMREAD_UNCHANGED);
     auto rows = m_in.rows;
     auto cols = m_in.cols;
     auto start = std::chrono::high_resolution_clock::now();
