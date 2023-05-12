@@ -71,7 +71,7 @@ int main() {
     unsigned char* out = nullptr;
     cudaMallocHost(&out, rows * cols);
     //cudaMemcpyAsync(out, s_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[0]);
-    cudaMemcpyAsync(out, g_d, rows * cols, cudaMemcpyDeviceToHost, stream[0]);
+    cudaMemcpyAsync(out, s_d, rows * cols, cudaMemcpyDeviceToHost, stream[0]);
     //cudaMemcpyAsync(out+(rows * cols)/2, g_d, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
     //cudaMemcpyAsync(out+(rows * cols)/2, s_d+(rows * cols)/2, (rows * cols)/2, cudaMemcpyDeviceToHost, stream[1]);
 
