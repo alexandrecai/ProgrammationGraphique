@@ -39,7 +39,7 @@ int main() {
     cv::Mat m_in = cv::imread("../images/in.jpg", cv::IMREAD_UNCHANGED);
     auto rows = m_in.rows;
     auto cols = m_in.cols;
-
+    auto start = std::chrono::high_resolution_clock::now();
 
 
     // Allocation et copie des données sur le GPU
@@ -65,7 +65,7 @@ int main() {
     grayscale_boxblur_shared<<<grid1, block, block.x * (block.y + 2) * sizeof(unsigned char), stream[0]>>>(rgb_d, s_d, cols, rows);
 
     // Appel du deuxième kernel
-    grayscale_boxblur_shared<<<grid1, block, block.x * block.y * sizeof(unsigned char), stream[1]>>>(s_d, g_d, cols, rows);
+    //grayscale_boxblur_shared<<<grid1, block, block.x * block.y * sizeof(unsigned char), stream[1]>>>(s_d, g_d, cols, rows);
 
     // Copie du résultat final sur le CPU
     unsigned char* out = nullptr;
@@ -79,7 +79,7 @@ int main() {
 
     // Affichage du temps d'exécution
     cudaDeviceSynchronize();
-    auto start = std::chrono::high_resolution_clock::now();
+
     cudaDeviceSynchronize();
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << "Execution time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
