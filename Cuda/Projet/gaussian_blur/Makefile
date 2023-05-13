@@ -3,7 +3,7 @@ CXXFLAGS=-O3 -march=native
 LDLIBS1=`pkg-config --libs opencv`
 LDLIBS2=-lm -lIL
 
-all: gaussian_blur gaussian_blur-cu
+all: gaussian_blur gaussian_blur-cu gaussian_blur_streams
 
 gaussian_blur: gaussian_blur.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDLIBS2)
