@@ -82,7 +82,7 @@ int main() {
 
     //cudaDeviceSynchronize();
     auto end = std::chrono::high_resolution_clock::now();
-    std::cout << "Execution time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << " ms" << std::endl;
+    std::cout << "Execution time: 0." << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << std::endl;
     cv::imwrite( "out.jpg", m_out );
     // Libération de la mémoire
     cudaFree(rgb_d);
