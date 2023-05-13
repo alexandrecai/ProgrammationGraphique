@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <IL/il.h>
+#include <chrono>
 
 int main() {
 
@@ -18,6 +19,8 @@ int main() {
     height = ilGetInteger(IL_IMAGE_HEIGHT);
     bpp = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
     format = ilGetInteger(IL_IMAGE_FORMAT);
+
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
     // Récupération des données de l'image
     unsigned char* data = ilGetData();
@@ -61,6 +64,9 @@ int main() {
 
     // Placement des données dans l'image
     ilTexImage(width, height, 1, 1, IL_LUMINANCE, IL_UNSIGNED_BYTE, out_edge_detection);
+
+    std::chrono::high_resolution_clock::time_point stop = std::chrono::high_resolution_clock::now();
+    std::cout << "Execution time: 0." << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() << std::endl;
 
     // Sauvegarde de l'image
     ilEnable(IL_FILE_OVERWRITE);
